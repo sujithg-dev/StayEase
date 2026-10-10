@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Booking Details - StayEase</title>
+
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/manager.css}">
+    <link rel="stylesheet" th:href="@{/css/booking.css}">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <script defer th:src="@{/js/main.js}"></script>
+</head>
+
+<body>
+    <div class="container dashboard">
+        <div th:replace="~{fragments/topbar :: topbar}"></div>
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+        <main class="main-content">
+            <section class="section">
+                <div class="back-wrapper">
+                    <a class="back-button" th:href="@{/manager/bookings}"><span class="material-symbols-outlined">arrow_back</span></a>
+                </div>
+                <div class="booking-confirmation">
+                    <div class="header">
+                        <h1 class="title">Booking Details</h1>
+                    </div>
+                    <h3 class="subtitle">Customer Information</h3>
+                    <div class="details">
+                        <div class="row">
+                            <span class="label">Name</span>
+                            <span class="data" th:text="${booking.customerName}"></span>
+                        </div>
+                        <div class="row">
+                            <span class="label">Email</span>
+                            <span class="data" th:text="${booking.customerEmail}"></span>
+                        </div>
+                    </div>
+                    <br>
+                    <h3 class="subtitle">Reservation</h3>
+                    <div class="details">
+                        <div class="row">
+                            <span class="label">Booking ID</span>
+                            <strong class="id" th:text="${booking.bookingNumber}"></strong>
+                        </div>
+                        <div class="row">
+                            <span class="label">Hotel</span>
+                            <span class="data" th:text="${booking.hotelName}"></span>
+                        </div>
+                        <div class="row">
+                            <span class="label">Room Type</span>
+                            <span class="data" th:text="${booking.roomType}"></span>
+                        </div>
+                        <div class="row">
+                            <span class="label">Check-in</span>
+                            <span class="data" th:text="${#temporals.format(booking.checkInDate, 'dd, MMM, yyyy')}"></span>
+                        </div>
+                        <div class="row">
+                            <span class="label">Check-out</span>
+                            <span class="data" th:text="${#temporals.format(booking.checkOutDate, 'dd, MMM, yyyy')}"></span>
+                        </div>
+                        <div class="row">
+                            <span class="label">Total Guests</span>
+                            <span class="data" th:text="${booking.totalGuests}"></span>
+                        </div>
+                        <div class="row">
+                            <span class="label">Total Rooms</span>
+                            <span class="data" th:text="${booking.totalRooms}"></span>
+                        </div>
+                        <div class="row">
+                            <span class="label">Booking Status</span>
+                            <span class="status-badge status-pending" th:if="${booking.bookingStatus.name() == 'PENDING_PAYMENT'}">Payment Pending</span>
+                            <span class="status-badge status-confirmed" th:if="${booking.bookingStatus.name() == 'CONFIRMED'}">Confirmed</span>
+                            <span class="status-badge status-completed" th:if="${booking.bookingStatus.name() == 'COMPLETED'}">Completed</span>
+                            <span class="status-badge status-cancelled" th:if="${booking.bookingStatus.name() == 'CANCELLED'}">Cancelled</span>
+                        </div>
+                    </div>
+                    <br>
+                    <h3 class="subtitle">Payment Summary</h3>
+                    <div class="details">
+                        <div class="row">
+                            <span class="label">Price per night</span>
+                            <span class="data" th:text="${'₹' + booking.roomPrice}"></span>
+                        </div>
+                        <div class="row">
+                            <span class="label">Total Amount</span>
+                            <span class="data" th:text="${'₹' + booking.totalAmount}"></span>
+                        </div>
+                        <div class="row" th:if="${booking.paymentStatus.name() == 'PAID'}">
+                            <span class="label">Payment ID</span>
+                            <span class="data" th:text="${booking.paymentId}"></span>
+                        </div>
+                        <div class="row" th:if="${booking.paymentStatus.name() == 'PAID'}">
+                            <span class="label">Payment Mode</span>
+                            <span class="data" th:text="${booking.paymentMode}"></span>
+                        </div>
+                        <div class="row">
+                            <span class="label">Payment Status</span>
+                            <span class="status-badge status-paid" th:if="${booking.paymentStatus.name() == 'PAID'}" >Paid</span>
+                            <span class="status-badge status-pending" th:if="${booking.paymentStatus.name() == 'PENDING'}" >Pending</span>
+                            <span class="status-badge status-failed" th:if="${booking.paymentStatus.name() == 'FAILED'}" >Failed</span>
+                            <span class="status-badge status-inactive" th:if="${booking.paymentStatus.name() == 'REFUNDED'}">Refunded</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>

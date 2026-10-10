@@ -1,0 +1,39 @@
+<header class="customer-topbar" th:fragment="customer-topbar">
+
+    <div class="container">
+
+        <div class="navbar">
+
+            <div class="logo">
+                <h2 class="logo-name">Stay<span>Ease</span></h2>
+                <p class="logo-description">Hotel Reservation Platform</p>
+            </div>
+
+            <div class="profile-badge" onclick="toggleDropdown('profile-dropdown')">
+                <div class="profile-image">
+                    <span class="avatar" th:text="${#strings.contains(user.userName, ' ') ? #strings.substring(user.userName, 0, 1) + #strings.substring(user.userName, #strings.indexOf(user.userName, ' ') + 1, #strings.indexOf(user.userName, ' ') + 2) : #strings.substring(user.userName, 0, 2)}"></span>
+                </div>
+                <div class="profile-details">
+                    <p class="user-name" th:text="${user.userName}"></p>
+                </div>
+                <div class="dropdown" id="profile-dropdown">
+                    <a class="dropdown-item" th:href="@{/profile}">
+                        <span class="material-symbols-outlined">account_circle</span>
+                        <span>My Profile</span>
+                    </a>
+                    <a class="dropdown-item" th:href="@{/bookings}">
+                        <span class="material-symbols-outlined">date_range</span>
+                        <span>My Bookings</span>
+                    </a>
+                    <form class="dropdown-item" th:action="@{/logout}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <span class="material-symbols-outlined">logout</span>
+                        <button type="submit">Logout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</header>

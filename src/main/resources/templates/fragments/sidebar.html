@@ -1,0 +1,48 @@
+<aside class="sidebar" th:fragment="sidebar">
+
+    <nav class="nav" sec:authorize="hasRole('ADMIN')">
+        <a class="nav-item" th:href="@{/admin/dashboard}" th:classappend="${currentPage == 'adminDashboard'} ? ' active' : ''">
+            <span class="material-symbols-outlined nav-icon">dashboard</span>
+            <span class="nav-name">Dashboard</span>
+        </a>
+        <a class="nav-item" th:href="@{/admin/users}" th:classappend="${currentPage == 'adminUsers'} ? ' active' : ''">
+            <span class="material-symbols-outlined nav-icon">manage_accounts</span>
+            <span class="nav-name">Manage Users</span>
+        </a>
+        <a class="nav-item" th:href="@{/admin/hotels}" th:classappend="${currentPage == 'adminHotels'} ? ' active' : ''">
+            <span class="material-symbols-outlined nav-icon">hotel</span>
+            <span class="nav-name">Manage Hotels</span>
+        </a>
+        <a class="nav-item" th:href="@{/admin/bookings}" th:classappend="${currentPage == 'adminBookings'} ? ' active' : ''">
+            <span class="material-symbols-outlined nav-icon">date_range</span>
+            <span class="nav-name">View Bookings</span>
+        </a>
+    </nav>
+
+    <nav class="nav" sec:authorize="hasRole('MANAGER')">
+        <a class="nav-item" th:href="@{/manager/dashboard}" th:classappend="${currentPage == 'managerDashboard'} ? ' active' : ''">
+            <span class="material-symbols-outlined nav-icon">dashboard</span>
+            <span class="nav-name">Dashboard</span>
+        </a>
+        <a class="nav-item" th:href="@{/manager/hotels}" th:classappend="${currentPage == 'managerHotels'} ? ' active' : ''">
+            <span class="material-symbols-outlined nav-icon">hotel</span>
+            <span class="nav-name">Manage Hotels</span>
+        </a>
+        <a class="nav-item" th:href="@{/manager/bookings}" th:classappend="${currentPage == 'managerBookings'} ? ' active' : ''">
+            <span class="material-symbols-outlined nav-icon">date_range</span>
+            <span class="nav-name">Manage Bookings</span>
+        </a>
+    </nav>
+
+    <nav class="nav" sec:authorize="hasRole('CUSTOMER')">
+        <a class="nav-item" th:href="@{/customer/dashboard}" th:classappend="${currentPage == 'dashboard'} ? ' active' : ''">
+            <span class="material-symbols-outlined nav-icon">search</span>
+            <span class="nav-name">Search Hotels</span>
+        </a>
+        <a class="nav-item" th:href="@{/customer/bookings}" th:classappend="${currentPage == 'booking'} ? ' active' : ''">
+            <span class="material-symbols-outlined nav-icon">date_range</span>
+            <span class="nav-name">My Bookings</span>
+        </a>
+    </nav>
+
+</aside>

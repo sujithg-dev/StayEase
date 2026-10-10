@@ -1,0 +1,203 @@
+/* bookings.html */
+.section-title {
+    margin: var(--48px) 0 var(--24px);
+}
+
+.booking-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--24px);
+}
+
+.booking-card {
+    padding: var(--24px);
+    gap: var(--24px);
+    border-radius: var(--24px);
+    box-shadow: var(--card-shadow);
+}
+
+.booking-card .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+}
+
+.booking-card .hotel-name {
+    margin-bottom: var(--6px);
+}
+
+.booking-card .booking-id .id {
+    color: var(--primary);
+}
+
+.booking-card .customer-name {
+    display: block;
+    margin-bottom: var(--4px);
+    text-align: right;
+}
+
+.booking-card .customer-email {
+    margin-top: var(--4px);
+    color: var(--primary);
+}
+
+.booking-card .details {
+    margin-top: var(--24px);
+    padding: var(--24px);
+    gap: var(--12px);
+    background: var(--bg-light);
+    border-radius: var(--24px);
+}
+
+.booking-card .row {
+    padding-block: var(--12px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.booking-card .row:not(:last-child) {
+    border-bottom: 2px solid var(--border-light);
+}
+
+.booking-card .row .label,
+.booking-card .row .data {
+    font-size: var(--fs-sm);
+}
+
+.booking-card .row .data {
+    font-weight: 600;
+}
+
+.booking-card .booking-actions {
+    margin-top: var(--24px);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--6px);
+}
+
+
+
+
+/* booking-confirmation.html */
+.booking-confirmation {
+    margin: auto;
+    padding: var(--36px);
+    max-width: 700px;
+    border-radius: var(--24px);
+    box-shadow: var(--card-shadow);
+}
+
+.booking-confirmation .header {
+    padding: var(--24px);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: var(--4px);
+}
+
+.booking-confirmation .status.confirmed {
+    color: var(--success);
+}
+
+.booking-confirmation .status.cancelled {
+    color: var(--danger);
+}
+
+.booking-confirmation .status.pending {
+    color: var(--warning);
+}
+
+.booking-confirmation .subtitle {
+    margin-bottom: var(--8px);
+    font-weight: 600;
+}
+
+.booking-confirmation .details {
+    padding: var(--12px) var(--24px);
+    gap: var(--12px);
+    background: var(--bg-light);
+    border-radius: var(--12px);
+}
+
+.booking-confirmation .row {
+    padding-block: var(--12px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.booking-confirmation .row:not(:last-child) {
+    border-bottom: 2px solid var(--border-light);
+}
+
+.booking-confirmation .row .label,
+.booking-confirmation .row .data {
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--text-accent);
+}
+
+.booking-confirmation .row .data {
+    font-weight: 700;
+}
+
+.booking-confirmation .row .id {
+    color: var(--primary);
+}
+
+
+
+
+/* booking-form.html */
+.booking-form {
+    margin: auto;
+    padding: var(--48px);
+    display: flex;
+    flex-direction: column;
+    gap: var(--24px);
+    max-width: 800px;
+    border-radius: var(--24px);
+    box-shadow: var(--card-shadow);
+}
+
+.booking-form .subtitle {
+    margin-top: var(--4px);
+    color: var(--text-secondary);
+}
+
+.booking-form .details {
+    padding: var(--24px);
+    gap: var(--12px);
+    background: var(--bg-light);
+    border-radius: var(--12px);
+}
+
+.booking-form .row {
+    padding-block: var(--14px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.booking-form .row:not(:last-child) {
+    border-bottom: 1px solid var(--border-light);
+}
+
+
+
+
+
+
+.payment-form {
+    margin: auto;
+    padding: var(--48px);
+    display: flex;
+    flex-direction: column;
+    gap: var(--24px);
+    max-width: 600px;
+    box-shadow: var(--card-shadow);
+    border-radius: var(--24px);
+}

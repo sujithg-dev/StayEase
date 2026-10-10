@@ -1,0 +1,78 @@
+<header class="topbar" th:fragment="topbar">
+
+    <div class="logo">
+        <h2 class="logo-name">Stay<span>Ease</span></h2>
+        <p class="logo-description">Hotel Reservation Platform</p>
+    </div>
+
+    <div class="topbar-title" sec:authorize="hasRole('ADMIN')">
+        <div th:switch="${currentPage}">
+            <div th:case="'adminDashboard'">
+                <h1 class="title">Admin Dashboard</h1>
+                <p class="subtitle">Manage and view all registered users and hotels</p>
+            </div>
+            <div th:case="'adminUsers'">
+                <h1 class="title">Manage Users</h1>
+                <p class="subtitle">Manage and view all registered users</p>
+            </div>
+            <div th:case="'adminHotels'">
+                <h1 class="title">Manage Hotels</h1>
+                <p class="subtitle">Manage and view all registered hotels</p>
+            </div>
+            <div th:case="'adminBookings'">
+                <h1 class="title">Bookings Details</h1>
+                <p class="subtitle">View all booking details</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="topbar-title" sec:authorize="hasRole('MANAGER')">
+        <div th:switch="${currentPage}">
+            <div th:case="'managerDashboard'">
+                <h1 class="title">Manager Dashboard</h1>
+                <p class="subtitle">Manage and view all your registered hotels</p>
+            </div>
+            <div th:case="'managerBookings'">
+                <h1 class="title">Manage Bookings</h1>
+                <p class="subtitle">Manage and view all customer bookings</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="topbar-title" sec:authorize="hasRole('CUSTOMER')">
+        <div th:switch="${currentPage}">
+            <div th:case="'dashboard'">
+                <h1 class="title">Welcome, <span th:text="${user.userName}"></span></h1>
+            </div>
+            <div th:case="'booking'">
+                <h1 class="title">My Bookings</h1>
+                <p class="subtitle">Manage and view all booking details</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="topbar-actions">
+        <div class="profile-badge" onclick="toggleDropdown('profile-dropdown')">
+            <div class="profile-image">
+                <span class="avatar" th:text="${#strings.contains(user.userName, ' ') ? #strings.substring(user.userName, 0, 1) + #strings.substring(user.userName, #strings.indexOf(user.userName, ' ') + 1, #strings.indexOf(user.userName, ' ') + 2) : #strings.substring(user.userName, 0, 2)}"></span>
+            </div>
+            <div class="profile-details">
+                <p class="user-name" th:text="${user.userName}"></p>
+                <span class="user-role" th:text="${#strings.capitalize(user.userRole.name().toLowerCase())}"></span>
+            </div>
+            <div class="dropdown" id="profile-dropdown">
+                <a class="dropdown-item" th:href="@{/profile}">
+                    <span class="material-symbols-outlined">account_circle</span>
+                    <span>My Profile</span>
+                </a>
+                <form class="dropdown-item" th:action="@{/logout}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <span class="material-symbols-outlined">logout</span>
+                    <button type="submit">Logout</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</header>

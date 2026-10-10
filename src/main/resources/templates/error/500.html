@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head('500 - Server Error')}"></head>
+
+<body>
+    <div class="error-page">
+        <div class="error-card">
+            <div class="error-icon error-icon-warning">
+                <i class="fas fa-map-signs"></i>
+            </div>
+            <h1 class="error-code">500</h1>
+            <div class="error-details">
+                <h2 class="error-title">Something Went Wrong</h2>
+                <p class="error-message">An unexpected error occurred.</p>
+            </div>
+            <a class="btn btn-primary" th:href="@{/main}">Back to Home</a>
+        </div>
+    </div>
+</body>
+
+</html>

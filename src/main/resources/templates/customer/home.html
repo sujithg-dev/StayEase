@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hotels - StayEase</title>
+
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/hotels.css}">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <script defer th:src="@{/js/main.js}"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div th:replace="~{fragments/customer-topbar :: customer-topbar}"></div>
+        <main class="main-content">
+            <section class="section section-customer-home">
+                <div class="hotel-search">
+                    <div class="hotel-search-header">
+                        <div>
+                            <img class="img" th:src="@{/assets/images/city.jpg}" alt="Hotel">
+                        </div>
+                        <div class="header-text">
+                            <h1 class="title">Book your hotel with StayEase</h1>
+                        </div>
+                    </div>
+                    <form class="form form-hotel-search" th:action="@{/hotels/search}" th:object="${searchRequest}" method="get">
+                        <div class="input-field">
+                            <label for="inLocation">Destination</label>
+                            <div class="input-field-inline">
+                                <span class="material-symbols-outlined icon">location_on</span>
+                                <input id="inLocation" type="text" th:field="*{city}" placeholder="Where are you going?">
+                            </div>
+                        </div>
+                        <div class="input-field">
+                            <label for="inMinPrice">Min Price</label>
+                            <div class="input-field-inline">
+                                <span class="material-symbols-outlined icon">currency_rupee</span>
+                                <input id="inMinPrice" type="number" th:field="*{minPrice}" min="0" placeholder="1000">
+                            </div>
+                        </div>
+                        <div class="input-field">
+                            <label for="inMaxPrice">Max Price</label>
+                            <div class="input-field-inline">
+                                <span class="material-symbols-outlined icon">currency_rupee</span>
+                                <input id="inMaxPrice" type="number" th:field="*{maxPrice}" min="0" placeholder="10000">
+                            </div>
+                        </div>
+                        <div class="input-field">
+                            <label for="inGuests">Guests</label>
+                            <div class="input-field-inline">
+                                <span class="material-symbols-outlined icon">person</span>
+                                <input id="inGuests" type="number" th:field="*{guests}" min="1" placeholder="Number of guests">
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit"><span class="material-symbols-outlined icon">search</span></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="popular-destinations">
+                    <h2 class="title">Popular destinations</h2>
+                    <div class="destination-grid">
+                        <a th:href="@{/hotels/search?city=Puducherry}" class="destination-card destination-1">
+                            <img th:src="@{/assets/images/puducherry.webp}" alt="Historic architecture in Copenhagen" loading="lazy">
+                            <span class="destination-name">Puducherry</span>
+                        </a>
+                        <a th:href="@{/hotels/search?city=Chennai}" class="destination-card destination-2">
+                            <img th:src="@{/assets/images/chennai.jpg}" alt="London streets and landmarks" loading="lazy">
+                            <span class="destination-name">Chennai</span>
+                        </a>
+                        <a th:href="@{/hotels/search?city=Bengalure}" class="destination-card destination-3">
+                            <img th:src="@{/assets/images/bangalore.webp}" alt="Historic streets of Lisbon" loading="lazy">
+                            <span class="destination-name">Bengalure</span>
+                        </a>
+                        <a th:href="@{/hotels/search?city=Mumbai}" class="destination-card destination-4">
+                            <img th:src="@{/assets/images/mumbai.webp}" alt="Coastal town in Croatia" loading="lazy">
+                            <span class="destination-name">Mumbai</span>
+                        </a>
+                        <a th:href="@{/hotels/search?city=Kochin}" class="destination-card destination-5">
+                            <img th:src="@{/assets/images/kochin.jpg}" alt="City architecture" loading="lazy">
+                            <span class="destination-name">Kochin</span>
+                        </a>
+                        <a th:href="@{/hotels/search?city=Goa}" class="destination-card destination-6">
+                            <img th:src="@{/assets/images/goa.jpg}" alt="Historic architecture in Copenhagen" loading="lazy">
+                            <span class="destination-name">Goa</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>

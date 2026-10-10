@@ -1,0 +1,23 @@
+.auth-page {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.auth-content {
+    margin: auto;
+    padding: var(--24px);
+    width: 600px;
+    background: var(--bg);
+    border-radius: var(--24px);
+    box-shadow: var(--card-shadow);
+}
+
+.auth-form {
+    padding: var(--36px) var(--24px);
+    display: flex;
+    flex-direction: column;
+    gap: var(--24px);
+}
+

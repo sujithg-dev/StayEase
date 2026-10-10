@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head('404 - Page Not Found')}"></head>
+
+<body>
+    <div class="error-page">
+        <div class="error-card">
+            <div class="error-icon error-icon-warning">
+                <i class="fas fa-map-signs"></i>
+            </div>
+            <h1 class="error-code">404</h1>
+            <div class="error-details">
+                <h3 class="error-title">Page Not Found</h3>
+                <p class="error-message">The page you're looking for may have been moved or doesn't exist.</p>
+            </div>
+            <a class="btn btn-primary" th:href="@{/main}">Back to Home</a>
+        </div>
+    </div>
+</body>
+
+</html>
