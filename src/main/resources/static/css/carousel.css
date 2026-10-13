@@ -1,0 +1,259 @@
+.carousel-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-modal.open {
+    display: flex;
+}
+
+.carousel-header {
+    position: absolute;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: var(--24px) var(--24px) var(--36px);
+    width: 100%;
+    height: 120px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    text-align: center;
+    color: var(--white);
+    background: #000000;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.4) 80%, rgba(0, 0, 0, 0) 100%);
+}
+
+.carousel-header .carousel-counter,
+.carousel-header .carousel-counter span {
+    font-family: var(--font-mono);
+    font-size: var(--fs-lg);
+    color: var(--white);
+}
+
+.carousel-header .carousel-title {
+    font-size: var(--fs-xl);
+    color: var(--white);
+}
+
+.carousel-header .carousel-subtitle {
+    margin-top: var(--8px);
+    font-size: var(--fs-md);
+    font-weight: 500;
+    color: var(--white);
+}
+
+.carousel-header .carousel-close {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    color: var(--white);
+    background: rgba(189, 12, 12, 0.5);
+    border-radius: 50%;
+}
+
+.carousel-header .carousel-close:hover {
+    background: rgba(189, 12, 12, 0.8);
+}
+
+.carousel-header .carousel-close>span {
+    font-size: var(--24px);
+    color: var(--white);
+}
+
+.carousel-stage {
+    position: absolute;
+    inset: 0 0 100px 0;
+}
+
+.carousel-slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.carousel-slide.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.carousel-slide img {
+    max-width: 85%;
+    max-height: 100%;
+    object-fit: cover;
+    user-select: none;
+    overflow: hidden;
+}
+
+.carousel-btn {
+    cursor: pointer;
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.carousel-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.carousel-btn>span {
+    font-size: var(--24px);
+    color: var(--white);
+}
+
+.carousel-btn {
+    top: calc(50% - 50px);
+    transform: translateY(-50%);
+}
+
+.carousel-prev {
+    left: 24px;
+}
+
+.carousel-next {
+    right: 24px;
+}
+
+
+
+
+
+.carousel-thumbs {
+    position: absolute;
+    z-index: 2;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: safe center;
+    gap: var(--6px);
+    height: 100px;
+    overflow-x: auto;
+}
+
+.carousel-thumb {
+    cursor: pointer;
+    flex: 0 0 auto;
+    width: 90px;
+    height: 64px;
+    padding: 0;
+    background: none;
+    border: 2px solid transparent;
+    border-radius: var(--12px);
+    overflow: hidden;
+    opacity: 0.55;
+    transition: opacity 0.2s, border-color 0.2s;
+}
+
+.carousel-thumb:hover {
+    opacity: 0.9;
+}
+
+.carousel-thumb.active {
+    border-color: var(--white);
+    opacity: 1;
+}
+
+/* ===================== Responsive ===================== */
+/* Complements your existing 600px block */
+
+@media (max-width: 992px) {
+    .carousel-header {
+        height: 100px;
+        padding: var(--16px) var(--16px) var(--28px);
+        gap: var(--12px);
+    }
+
+    .carousel-header>div:nth-child(2) {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .carousel-header .carousel-title {
+        font-size: var(--fs-lg);
+        overflow-wrap: anywhere;
+    }
+
+    .carousel-header .carousel-subtitle {
+        font-size: var(--fs-sm);
+    }
+
+    /* Use the full width for the photo */
+    .carousel-slide img {
+        max-width: 100%;
+        object-fit: contain;
+    }
+}
+
+@media (max-width: 600px) {
+    .carousel-header {
+        height: 88px;
+        padding: var(--12px) var(--12px) var(--24px);
+    }
+
+    .carousel-header .carousel-counter,
+    .carousel-header .carousel-counter span {
+        font-size: var(--fs-base);
+    }
+
+    .carousel-header .carousel-title {
+        font-size: var(--fs-md);
+    }
+
+    .carousel-header .carousel-subtitle {
+        margin-top: var(--4px);
+    }
+
+    .carousel-header .carousel-close {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* Phones in landscape: not enough height for header + thumbnails */
+@media (max-height: 500px) {
+    .carousel-header {
+        height: 64px;
+        padding: var(--8px) var(--16px);
+    }
+
+    .carousel-header .carousel-subtitle {
+        display: none;
+    }
+
+    .carousel-stage {
+        bottom: 0;
+    }
+
+    .carousel-thumbs {
+        display: none;
+    }
+
+    .carousel-btn {
+        top: 50%;
+    }
+}
