@@ -41,7 +41,7 @@ public class HomeController
     public String searchHotels(
             @ModelAttribute("searchRequest") HotelSearchRequest request,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "6") int size,
+            @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "recommended") String sortBy,
             Model model)
     {

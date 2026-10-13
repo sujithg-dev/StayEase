@@ -100,6 +100,8 @@ document.addEventListener("DOMContentLoaded", function ()
 });
 
 
+
+
 document.querySelectorAll('.hotel-nav .nav-item').forEach(tab => {
 
     tab.addEventListener('click', function (event) {
@@ -121,3 +123,18 @@ document.querySelectorAll('.hotel-nav .nav-item').forEach(tab => {
     });
 });
 
+
+const fileInput = document.getElementById('file-hidden');
+const placeholderText = document.getElementById('placeholder-text');
+
+fileInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+        // Show the selected filename instead of the placeholder
+        placeholderText.textContent = e.target.files[0].name;
+        placeholderText.className = "file-name-active";
+    } else {
+        // Fallback if they clear it
+        placeholderText.textContent = "Choose a file to upload...";
+        placeholderText.className = "placeholder";
+    }
+});

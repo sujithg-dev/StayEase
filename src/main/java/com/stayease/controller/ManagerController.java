@@ -1,11 +1,15 @@
 package com.stayease.controller;
 
+import com.stayease.helper.TablePaging;
 import com.stayease.model.Booking;
 import com.stayease.model.Hotel;
 import com.stayease.model.User;
 import com.stayease.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,9 +17,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("/manager")
@@ -27,6 +34,18 @@ public class ManagerController
     private final HotelService hotelService;
     private final BookingService bookingService;
     private final ImageService imageService;
+
+    private static final Map<String, String> BOOKING_SORTABLE = Map.of(
+            "bookingNumber", "bookingNumber",
+            "customerName",  "customerName",
+            "hotelName",     "hotelName",
+            "roomType",      "roomType",
+            "checkInDate",   "checkInDate",
+            "checkOutDate",  "checkOutDate",
+            "totalRooms",    "totalRooms",
+            "totalAmount",   "totalAmount",
+            "paymentStatus", "paymentStatus",
+            "bookingStatus", "bookingStatus");
 
     @ModelAttribute("user")
     public User getUser(Authentication authentication)
@@ -64,18 +83,45 @@ public class ManagerController
     }
 
     @GetMapping("/bookings")
-    public String allManagerHotelBookings(@ModelAttribute("user") User user, Model model)
+    public String allManagerHotelBookings(
+            @ModelAttribute("user") User user,
+            @RequestParam(required = false) String q,
+            @RequestParam(required = false) String hotel,
+            @RequestParam(required = false) String payment,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String sort,
+            @RequestParam(defaultValue = "desc") String dir,
+            Model model)
     {
         String managerId = user.getUserId();
 
-        List<Booking> bookings = managerService.getManagerHotelsByManageId(managerId)
-                .stream()
-                .flatMap(hotel -> bookingService.getHotelBookings(hotel.getHotelId()).stream())
-                .toList();
+        Pageable pageable = TablePaging.of(page, size, sort, dir, BOOKING_SORTABLE, "id");
+        Page<Booking> result = managerService.getManagerHotelBookings(user.getUserId(), q, hotel, payment, status, from, to, pageable);
+
+        boolean hasFilters = Stream.of(q, hotel, payment, status).anyMatch(s -> s != null && !s.isBlank())
+                || from != null || to != null;
 
         model.addAttribute("currentPage", "managerBookings");
         model.addAttribute("manager", managerId);
-        model.addAttribute("bookings", bookings);
+        model.addAttribute("page", result);
+        model.addAttribute("allBookings", managerService.getBookingCountByManageId(managerId));
+        model.addAttribute("bookings", result.getContent());
+        model.addAttribute("hasFilters", hasFilters);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+        model.addAttribute("q", q);
+        model.addAttribute("hotel", hotel);
+        model.addAttribute("payment", payment);
+        model.addAttribute("status", status);
+        model.addAttribute("from", from);
+        model.addAttribute("to", to);
+        model.addAttribute("paymentStatuses", Booking.PaymentStatus.values());
+        model.addAttribute("bookingStatuses", Booking.BookingStatus.values());
+        model.addAttribute("hotels", managerService.getManagerHotelNames(user.getUserId()));
 
         return "manager/bookings";
     }

@@ -15,9 +15,40 @@
 }
 
 .auth-form {
-    padding: var(--36px) var(--24px);
+    padding: var(--24px);
     display: flex;
     flex-direction: column;
-    gap: var(--24px);
+    gap: var(--18px);
 }
 
+/* ===================== Responsive ===================== */
+
+/* No absolute centering on small/short screens (tall forms got cut off) */
+@media (max-width: 640px),
+(max-height: 760px) {
+    .auth-page {
+        position: static;
+        transform: none;
+        min-height: 100dvh;
+        padding: var(--16px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .auth-content {
+        width: 100%;
+        max-width: 600px;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-content {
+        padding: var(--8px);
+        border-radius: var(--16px);
+    }
+
+    .auth-form {
+        padding: var(--16px);
+    }
+}

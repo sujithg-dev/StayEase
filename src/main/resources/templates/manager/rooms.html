@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <script defer th:src="@{/js/main.js}"></script>
+    <script defer th:src="@{/js/sidebar-toggle.js}"></script>
 </head>
 
 <body>
@@ -41,7 +42,8 @@
                             <img class="room-image" th:src="${room.roomCoverImage}" th:alt="${room.roomType}">
                         </div>
                         <div class="room-details">
-                            <span class="room-status" th:classappend="${room.roomStatus.name() == 'AVAILABLE' ? 'active' : 'inactive'}" th:text="${#strings.capitalize(room.roomStatus.name().toLowerCase())}"></span>
+                            <span class="room-status status-badge status-active" th:if="${room.roomStatus.name() == 'AVAILABLE'}">Available</span>
+                            <span class="room-status status-badge status-inactive" th:if="${room.roomStatus.name() == 'UNAVAILABLE'}">unavailable</span>
                             <h3 class="room-name" th:text="${room.roomName}"></h3>
                             <div class="room-info">
                                 <span class="row">
@@ -67,9 +69,9 @@
                             </div>
                         </div>
                         <div class="room-actions">
-                            <a class="btn btn-primary" th:href="@{/manager/hotels/{hotelId}/rooms/edit/{roomId}(hotelId=${hotel.hotelId},roomId=${room.roomId})}">Edit</a>
+                            <a class="btn btn-secondary" th:href="@{/manager/hotels/{hotelId}/rooms/edit/{roomId}(hotelId=${hotel.hotelId},roomId=${room.roomId})}"><span class="material-symbols-outlined icon">edit</span></a>
                             <form th:action="@{/manager/hotels/{hotelId}/rooms/delete/{roomId}(hotelId=${hotel.hotelId},roomId=${room.roomId})}" method="post" onsubmit="return confirm('Delete this room?');">
-                                <button class="btn btn-danger" type="submit">Delete</button>
+                                <button class="btn btn-danger" type="submit"><span class="material-symbols-outlined icon">delete</span></button>
                             </form>
                         </div>
                     </div>

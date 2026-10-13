@@ -39,21 +39,18 @@ public class PaymentController
     @PostMapping("/create")
     public String processPayment(
             @ModelAttribute("user") User user,
-            @Valid @ModelAttribute PaymentRequest paymentRequest,
-            @RequestParam String bookingId,
+            @Valid @ModelAttribute("paymentRequest") PaymentRequest paymentRequest,
             BindingResult bindingResult,
+            @RequestParam String bookingId,
             Model model)
     {
-        String customerId = user.getUserId();
-
         if (bindingResult.hasErrors())
         {
             model.addAttribute("bookingId", bookingId);
-
             return "customer/payment";
         }
 
-        Booking booking = paymentService.processPayment(bookingId, customerId, paymentRequest.getPaymentMethod());
+        Booking booking = paymentService.processPayment(bookingId, user.getUserId(), paymentRequest.getPaymentMethod());
 
         return "redirect:/bookings/" + booking.getBookingId();
     }

@@ -20,7 +20,7 @@
                 <p class="subtitle">Manage and view all registered hotels</p>
             </div>
             <div th:case="'adminBookings'">
-                <h1 class="title">Bookings Details</h1>
+                <h1 class="title">View Bookings</h1>
                 <p class="subtitle">View all booking details</p>
             </div>
         </div>
@@ -30,6 +30,10 @@
         <div th:switch="${currentPage}">
             <div th:case="'managerDashboard'">
                 <h1 class="title">Manager Dashboard</h1>
+                <p class="subtitle">Manage and view all your registered hotels</p>
+            </div>
+            <div th:case="'managerHotels'">
+                <h1 class="title">Manage Hotels</h1>
                 <p class="subtitle">Manage and view all your registered hotels</p>
             </div>
             <div th:case="'managerBookings'">

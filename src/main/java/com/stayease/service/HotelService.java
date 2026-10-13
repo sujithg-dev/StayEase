@@ -35,87 +35,52 @@ public class HotelService
     {
         List<Hotel> hotels = hotelRepository.findByHotelStatus(Hotel.HotelStatus.ACTIVE);
 
-        hotels = hotels.stream()
+        hotels = hotels
+                .stream()
                 .filter(hotel ->
                 {
-                    if (request.getCity() == null || request.getCity().isBlank())
-                    {
-                        return true;
-                    }
+                    if (request.getDestination() == null || request.getDestination().isBlank()) return true;
 
-                    return hotel.getHotelCity() != null && hotel.getHotelCity().equalsIgnoreCase(request.getCity().trim());
+                    String keyword = request.getDestination().trim().toLowerCase();
+
+                    return (hotel.getHotelStreet() != null && hotel.getHotelStreet().toLowerCase().contains(keyword))
+                            || (hotel.getHotelCity() != null && hotel.getHotelCity().toLowerCase().contains(keyword))
+                            || (hotel.getHotelState() != null && hotel.getHotelState().toLowerCase().contains(keyword))
+                            || (hotel.getHotelCountry() != null && hotel.getHotelCountry().toLowerCase().contains(keyword));
                 })
-
                 .filter(hotel ->
                 {
-                    if (request.getMinRating() == null)
-                    {
-                        return true;
-                    }
+                    if (request.getMinRating() == null) return true;
 
                     return hotel.getHotelRating() >= request.getMinRating();
                 })
-
                 .filter(hotel ->
                 {
-                    if (request.getAmenities() == null || request.getAmenities().isEmpty())
-                    {
-                        return true;
-                    }
+                    if (request.getAmenities() == null || request.getAmenities().isEmpty()) return true;
 
-                    if (hotel.getHotelAmenities() == null)
-                    {
-                        return false;
-                    }
+                    if (hotel.getHotelAmenities() == null) return false;
 
                     return request.getAmenities()
                             .stream()
-                            .allMatch(selectedAmenity ->
-                                    hotel.getHotelAmenities()
-                                            .stream()
-                                            .anyMatch(hotelAmenity ->
-                                                    hotelAmenity.equalsIgnoreCase(
-                                                            selectedAmenity
-                                                    )
-                                            )
+                            .allMatch(selectedAmenity -> hotel.getHotelAmenities()
+                                    .stream().anyMatch(hotelAmenity -> hotelAmenity.equalsIgnoreCase(selectedAmenity))
                             );
                 })
-
                 .filter(hotel ->
                 {
                     List<Room> rooms = roomRepository.findByHotelId(hotel.getHotelId());
 
                     return rooms.stream().anyMatch(room ->
                     {
-                        if (room.getRoomStatus() != Room.RoomStatus.AVAILABLE)
-                        {
-                            return false;
-                        }
-
-                        if (room.getAvailableRooms() <= 0)
-                        {
-                            return false;
-                        }
-
-                        if (request.getMinPrice() != null && room.getRoomPrice() < request.getMinPrice())
-                        {
-                            return false;
-                        }
-
-                        if (request.getMaxPrice() != null && room.getRoomPrice() > request.getMaxPrice())
-                        {
-                            return false;
-                        }
-
-                        if (request.getGuests() != null && room.getRoomCapacity() < request.getGuests())
-                        {
-                            return false;
-                        }
+                        if (room.getRoomStatus() != Room.RoomStatus.AVAILABLE) return false;
+                        if (room.getAvailableRooms() <= 0) return false;
+                        if (request.getMinPrice() != null && room.getRoomPrice() < request.getMinPrice()) return false;
+                        if (request.getMaxPrice() != null && room.getRoomPrice() > request.getMaxPrice()) return false;
+                        if (request.getGuests() != null && room.getRoomCapacity() < request.getGuests()) return false;
 
                         return true;
                     });
                 })
-
                 .collect(Collectors.toList());
 
         hotels = new ArrayList<>(hotels);
@@ -123,13 +88,15 @@ public class HotelService
         for (Hotel hotel : hotels)
         {
             Double startingPrice = roomService.getStartingPrice(hotel.getHotelId());
+            Double highestPrice = roomService.getHighestrice(hotel.getHotelId());
             hotel.setStartingPrice(startingPrice);
+            hotel.setHighestPrice(highestPrice);
         }
 
         switch (sortBy)
         {
             case "recommended" -> hotels.sort(Comparator.comparing(Hotel::getHotelRating, Comparator.nullsLast(Comparator.reverseOrder())));
-            case "priceDesc" -> hotels.sort(Comparator.comparing(Hotel::getStartingPrice, Comparator.nullsLast(Comparator.reverseOrder())));
+            case "priceDesc" -> hotels.sort(Comparator.comparing(Hotel::getHighestPrice, Comparator.nullsLast(Comparator.reverseOrder())));
             case "priceAsc" -> hotels.sort(Comparator.comparing(Hotel::getStartingPrice, Comparator.nullsLast(Comparator.naturalOrder())));
             case "ratingDesc" -> hotels.sort(Comparator.comparing(Hotel::getHotelRating, Comparator.nullsLast(Comparator.reverseOrder())));
             case "ratingAsc" -> hotels.sort(Comparator.comparing(Hotel::getHotelRating, Comparator.nullsLast(Comparator.naturalOrder())));
@@ -145,17 +112,10 @@ public class HotelService
 
         List<Hotel> paginatedHotels;
 
-        if (start >= totalElements)
-        {
-            paginatedHotels = List.of();
-        }
-        else
-        {
-            paginatedHotels = hotels.subList(start, end);
-        }
+        if (start >= totalElements) paginatedHotels = List.of();
+        else paginatedHotels = hotels.subList(start, end);
 
         Pageable pageable = PageRequest.of(page, size);
-
 
         return new PageImpl<>(paginatedHotels, pageable, totalElements);
     }
@@ -288,6 +248,4 @@ public class HotelService
         hotelRepository.save(hotel);
         imageService.deleteHotelImageFile(image);
     }
-
-
 }

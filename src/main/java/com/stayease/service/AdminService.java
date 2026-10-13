@@ -1,5 +1,6 @@
 package com.stayease.service;
 
+import com.stayease.helper.MongoTable;
 import com.stayease.model.Booking;
 import com.stayease.model.Hotel;
 import com.stayease.model.User;
@@ -7,9 +8,16 @@ import com.stayease.repository.BookingRepository;
 import com.stayease.repository.HotelRepository;
 import com.stayease.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +26,8 @@ public class AdminService
     private final UserRepository userRepository;
     private final HotelRepository hotelRepository;
     private final BookingRepository bookingRepository;
+
+    private final MongoTemplate mongoTemplate;
 
     public List<User> getAllUsers()
     {
@@ -32,6 +42,81 @@ public class AdminService
     public List<Booking> getAllBookings()
     {
         return bookingRepository.findAll();
+    }
+
+    public Page<User> getUsers(String q, String role, String status, Pageable pageable)
+    {
+        List<Criteria> criteria = Arrays.asList(
+                MongoTable.search(q, "userName", "userEmail"),
+                MongoTable.enumEqual("userRole", User.UserRole.class, role),
+                MongoTable.enumEqual("userStatus", User.UserStatus.class, status),
+                Criteria.where("userRole").ne(User.UserRole.ADMIN));
+
+        return MongoTable.find(mongoTemplate, User.class, criteria, pageable);
+    }
+
+    public Page<Hotel> getHotels(String q, String status, Pageable pageable)
+    {
+        List<Criteria> criteria = Arrays.asList(
+                MongoTable.search(q, "hotelName", "managerName", "mangerEmail", "hotelCity", "hotelState", "hotelCountry"),
+                MongoTable.enumEqual("hotelStatus", Hotel.HotelStatus.class, status));
+
+        Page<Hotel> page = MongoTable.find(mongoTemplate, Hotel.class, criteria, pageable);
+
+        Map<String, String> names = getManagerNames(page.getContent());
+        Map<String, String> email = getManagerEmails(page.getContent());
+        page.getContent().forEach(h -> h.setManagerName(names.get(h.getManagerId())));
+        page.getContent().forEach(h -> h.setManagerEmail(email.get(h.getManagerId())));
+
+        return page;
+    }
+
+    public Map<String, String> getManagerNames(Collection<Hotel> hotels)
+    {
+        Set<String> ids = hotels.stream()
+                .map(Hotel::getManagerId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        if (ids.isEmpty()) return Map.of();
+
+        return userRepository.findAllById(ids).stream()
+                .collect(Collectors.toMap(
+                        User::getUserId,
+                        u -> Objects.toString(u.getUserName(), "")));
+    }
+
+    public Map<String, String> getManagerEmails(Collection<Hotel> hotels)
+    {
+        Set<String> ids = hotels.stream()
+                .map(Hotel::getManagerId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        if (ids.isEmpty()) return Map.of();
+
+        return userRepository.findAllById(ids).stream()
+                .collect(Collectors.toMap(
+                        User::getUserId,
+                        u -> Objects.toString(u.getUserEmail(), "")));
+    }
+
+    public List<String> getBookingHotelNames() {
+        return mongoTemplate.findDistinct(new Query(), "hotelName", Booking.class, String.class)
+                .stream().sorted(String.CASE_INSENSITIVE_ORDER).toList();
+    }
+
+    public Page<Booking> getBookings(String q, String hotel, String payment, String status, LocalDate from, LocalDate to, Pageable pageable)
+    {
+        List<Criteria> criteria = Arrays.asList(
+                MongoTable.search(q, "bookingNumber", "customerName", "customerEmail", "hotelName", "roomName"),
+                MongoTable.equal("hotelName", hotel),
+                MongoTable.enumEqual("paymentStatus", Booking.PaymentStatus.class, payment),
+                MongoTable.enumEqual("bookingStatus", Booking.BookingStatus.class, status),
+                MongoTable.dateFrom("checkInDate", from),
+                MongoTable.dateTo("checkInDate", to));
+
+        return MongoTable.find(mongoTemplate, Booking.class, criteria, pageable);
     }
 
     public User getUserById(String userId)

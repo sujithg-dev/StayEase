@@ -33,6 +33,8 @@ public class Booking
 
     private String roomId;
 
+    private String roomName;
+
     private String roomType;
 
     private LocalDate checkInDate;

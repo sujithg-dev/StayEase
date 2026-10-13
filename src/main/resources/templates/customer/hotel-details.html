@@ -9,28 +9,56 @@
 
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/hotel-details.css}">
+    <link rel="stylesheet" th:href="@{/css/carousel.css}">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <script defer th:src="@{/js/main.js}"></script>
+    <script defer th:src="@{/js/carousel.js}"></script>
 </head>
 
 <body>
     <div class="container">
         <div th:replace="~{fragments/customer-topbar :: customer-topbar}"></div>
         <main class="main-content">
-            <section class="section hotel-page">
+            <section class="section section-hotel-details">
                 <div class="back-wrapper">
                     <a class="back-button" th:href="@{/hotels/search}"><span class="material-symbols-outlined">arrow_back</span></a>
                 </div>
                 <div class="hotel-gallery">
-                    <div class="gallery-main">
+                    <div class="gallery-main" data-carousel-target="hotel" th:attr="data-index=${hotel.hotelImages != null && hotel.hotelImages.indexOf(hotel.hotelCoverImage) >= 0 ? hotel.hotelImages.indexOf(hotel.hotelCoverImage) : 0}">
                         <img class="hotel-image" th:src="${hotel.hotelCoverImage}" th:alt="${hotel.hotelName}">
                     </div>
                     <div class="gallery-small" th:if="${hotel.hotelImages != null}">
-                        <div class="gallery-item" th:each="image, stat : ${hotel.hotelImages}" th:if="${image != hotel.hotelCoverImage && stat.index < 5}">
+                        <div class="gallery-item" data-carousel-target="hotel" th:each="image, stat : ${hotel.hotelImages}" th:if="${image != hotel.hotelCoverImage && stat.index < 5}" th:attr="data-index=${stat.index}">
                             <img class="hotel-image" th:src="${image}" th:alt="${hotel.hotelName}">
+                        </div>
+                    </div>
+                    <div class="carousel-modal" data-carousel="hotel" role="dialog" aria-modal="true" aria-hidden="true" th:if="${hotel.hotelImages != null}">
+                        <div class="carousel-header">
+                            <div class="carousel-counter">
+                                <span class="carousel-current"></span> / <span th:text="${hotel.hotelImages.size()}"></span>
+                            </div>
+                            <div>
+                                <h1 class="carousel-title" th:text="${hotel.hotelName}"></h1>
+                                <p class="carousel-subtitle" th:text="${hotel.hotelCity + ', ' + hotel.hotelState}"></p>
+                            </div>
+                            <div>
+                                <button type="button" class="carousel-close" aria-label="Close"><span class="material-symbols-outlined">close</span></button>
+                            </div>
+                        </div>
+                        <button type="button" class="carousel-btn carousel-prev" aria-label="Previous image"><span class="material-symbols-outlined">chevron_left</span></button>
+                        <div class="carousel-stage">
+                            <div class="carousel-slide" th:each="image : ${hotel.hotelImages}">
+                                <img th:src="${image}" th:alt="${hotel.hotelName}">
+                            </div>
+                        </div>
+                        <button type="button" class="carousel-btn carousel-next" aria-label="Next image"><span class="material-symbols-outlined">chevron_right</span></button>
+                        <div class="carousel-thumbs">
+                            <button type="button" class="carousel-thumb" th:each="image, s : ${hotel.hotelImages}" th:attr="data-index=${s.index}, aria-label=|Go to image ${s.count}|">
+                                <img th:src="${image}" alt="">
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -43,23 +71,22 @@
                         </div>
                     </div>
                     <div class="hotel-rating">
-                        <div class="rating rating-excellent" th:if="${hotel.hotelRating >= 4}">
+                        <div class="status-badge status-excellent" th:if="${hotel.hotelRating >= 4}">
                             <span class="material-symbols-outlined icon">star_rate_half</span>
-                            <span class="rating-text" th:text="${hotel.hotelRating}"></span>
+                            <span class="data" th:text="${hotel.hotelRating}"></span>
                         </div>
-                        <div class="rating rating-good" th:if="${hotel.hotelRating >= 3 and hotel.hotelRating < 4}">
+                        <div class="status-badge status-good" th:if="${hotel.hotelRating >= 3 and hotel.hotelRating < 4}">
                             <span class="material-symbols-outlined icon">star_rate_half</span>
-                            <span class="rating-text" th:text="${hotel.hotelRating}"></span>
+                            <span class="data" th:text="${hotel.hotelRating}"></span>
                         </div>
-                        <div class="rating rating-average" th:if="${hotel.hotelRating >= 2 and hotel.hotelRating < 3}">
+                        <div class="status-badge status-average" th:if="${hotel.hotelRating >= 2 and hotel.hotelRating < 3}">
                             <span class="material-symbols-outlined icon">star_rate_half</span>
-                            <span class="rating-text" th:text="${hotel.hotelRating}"></span>
+                            <span class="data" th:text="${hotel.hotelRating}"></span>
                         </div>
-                        <div class="rating rating-bad" th:if="${hotel.hotelRating < 2}">
+                        <div class="status-badge status-bad" th:if="${hotel.hotelRating < 2}">
                             <span class="material-symbols-outlined icon">star_rate_half</span>
-                            <span class="rating-text" th:text="${hotel.hotelRating}"></span>
+                            <span class="data" th:text="${hotel.hotelRating}"></span>
                         </div>
-                        <span class="hotel-review-count"></span>
                     </div>
                 </div>
                 <nav class="hotel-nav">
@@ -78,9 +105,39 @@
                 <div class="hotel-section rooms-section" id="rooms">
                     <h2 class="title">Rooms</h2>
                     <div class="rooms-layout" th:if="${!#lists.isEmpty(rooms)}">
-                        <div class="room-card" th:each="room : ${rooms}">
-                            <div class="room-image-box">
+                        <div class="room-card" th:each="room, roomStat : ${rooms}">
+                            <div class="room-image-box" th:attr="data-carousel-target=|room-${roomStat.index}|, data-index=${room.roomImages != null && room.roomImages.indexOf(room.roomCoverImage) >= 0 ? room.roomImages.indexOf(room.roomCoverImage) : 0}">
                                 <img class="room-image" th:src="${room.roomCoverImage}" th:alt="${room.roomType}">
+                            </div>
+                            <div class="carousel-modal" role="dialog" aria-modal="true" aria-hidden="true" th:if="${room.roomImages != null}" th:attr="data-carousel=|room-${roomStat.index}|">
+                                <div class="carousel-header">
+                                    <div class="carousel-counter">
+                                        <span class="carousel-current"></span> / <span th:text="${room.roomImages.size()}"></span>
+                                    </div>
+                                    <div>
+                                        <h1 class="carousel-title" th:text="${hotel.hotelName}"></h1>
+                                        <p class="carousel-subtitle" th:text="${room.roomName}"></p>
+                                    </div>
+                                    <div>
+                                        <button type="button" class="carousel-close" aria-label="Close"><span class="material-symbols-outlined">close</span></button>
+                                    </div>
+                                </div>
+                                <button type="button" class="carousel-btn carousel-prev" aria-label="Previous image">
+                                    <span class="material-symbols-outlined">chevron_left</span>
+                                </button>
+                                <div class="carousel-stage">
+                                    <div class="carousel-slide" th:each="image : ${room.roomImages}">
+                                        <img th:src="${image}" th:alt="${room.roomName}">
+                                    </div>
+                                </div>
+                                <button type="button" class="carousel-btn carousel-next" aria-label="Next image">
+                                    <span class="material-symbols-outlined">chevron_right</span>
+                                </button>
+                                <div class="carousel-thumbs">
+                                    <button type="button" class="carousel-thumb" th:each="image, s : ${room.roomImages}" th:attr="data-index=${s.index}, aria-label=|Go to image ${s.count}|">
+                                        <img th:src="${image}" alt="">
+                                    </button>
+                                </div>
                             </div>
                             <div class="room-details">
                                 <div>
@@ -89,18 +146,14 @@
                                 </div>
                                 <div class="room-info">
                                     <span class="row">
-                                        <span class="label">Room type</span>
-                                        <span class="data" th:text="${room.roomType}"></span>
-                                    </span>
-                                        <span class="row">
                                         <span class="label">No of guests</span>
                                         <span class="data" th:text="${'x' + room.roomCapacity}"></span>
                                     </span>
-                                        <span class="row">
+                                    <span class="row">
                                         <span class="label">No of beds</span>
                                         <span class="data" th:text="${'x' + room.roomCapacity}"></span>
                                     </span>
-                                        <span class="row">
+                                    <span class="row">
                                         <span class="label">Available rooms</span>
                                         <span class="data" th:text="${room.availableRooms}"></span>
                                     </span>
@@ -151,6 +204,7 @@
                     <div class="reviews-layout">
                         <div class="review-summary">
                             <div class="overall-rating">
+                                <span>Overall</span>
                                 <strong class="rating" th:text="${hotel.hotelRating}"></strong>
                                 <span>/ 5</span>
                             </div>

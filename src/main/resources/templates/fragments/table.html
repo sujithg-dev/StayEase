@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+    <th class="sortable"
+        th:fragment="sortTh(label, field, cls)"
+        th:classappend="${cls}"
+        th:data-sort="${field}"
+        th:attr="aria-sort=${sort == field ? (dir == 'asc' ? 'ascending' : 'descending') : null}"
+        th:text="${label}">
+    </th>
+
+    <div th:fragment="pagination(page)" class="pagination" th:if="${page.totalElements > 0}">
+        <span class="pagination-info" th:text="|Showing ${page.number * page.size + 1}–${page.number * page.size + page.numberOfElements} of ${page.totalElements}|"></span>
+        <label class="page-size">Rows
+            <select data-page-size>
+                <option th:each="s : ${ {5, 10, 25, 50, 100} }" th:value="${s}" th:text="${s}" th:selected="${page.size == s}"></option>
+            </select>
+        </label>
+        <div class="pagination-pages">
+            <button type="button" data-page="0" th:disabled="${page.first}"><span class="material-symbols-outlined icon">keyboard_double_arrow_left</span></button>
+            <button type="button" th:data-page="${page.number - 1}" th:disabled="${page.first}"><span class="material-symbols-outlined icon">keyboard_arrow_left</span></button>
+            <button type="button" th:each="i : ${#numbers.sequence(T(java.lang.Math).max(0, page.number - 2), T(java.lang.Math).min(page.totalPages - 1, page.number + 2))}" th:data-page="${i}" th:text="${i + 1}" th:classappend="${i == page.number} ? 'active'"></button>
+            <button type="button" th:data-page="${page.number + 1}" th:disabled="${page.last}"><span class="material-symbols-outlined icon">keyboard_arrow_right</span></button>
+            <button type="button" th:data-page="${page.totalPages - 1}" th:disabled="${page.last}"><span class="material-symbols-outlined icon">keyboard_double_arrow_right</span></button>
+        </div>
+    </div>
+
+</body>
+</html>

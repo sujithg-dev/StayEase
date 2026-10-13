@@ -20,79 +20,82 @@
     <div class="container">
         <div th:replace="~{fragments/customer-topbar :: customer-topbar}"></div>
         <main class="main-content">
-            <section class="section section-customer-home">
-                <div class="hotel-search">
-                    <div class="hotel-search-header">
-                        <div>
-                            <img class="img" th:src="@{/assets/images/city.jpg}" alt="Hotel">
-                        </div>
-                        <div class="header-text">
-                            <h1 class="title">Book your hotel with StayEase</h1>
-                        </div>
+            <section class="section section-home-search">
+                <div class="home-search-container">
+                    <div class="home-search-header">
+                        <img class="image search-image" th:src="@{/assets/images/city.jpg}" alt="Hotel">
+                        <h1 class="title search-title">Book your hotel with StayEase</h1>
                     </div>
-                    <form class="form form-hotel-search" th:action="@{/hotels/search}" th:object="${searchRequest}" method="get">
-                        <div class="input-field">
-                            <label for="inLocation">Destination</label>
-                            <div class="input-field-inline">
-                                <span class="material-symbols-outlined icon">location_on</span>
-                                <input id="inLocation" type="text" th:field="*{city}" placeholder="Where are you going?">
+                    <div class="home-search-content">
+                        <form class="form form-hotel-search" th:action="@{/hotels/search}" th:object="${searchRequest}" method="get">
+                            <div class="input-field">
+                                <label class="label" for="inLocation">Destination</label>
+                                <div class="input-field-inline">
+                                    <span class="material-symbols-outlined icon">location_on</span>
+                                    <input class="input" id="inLocation" type="text" th:field="*{destination}" placeholder="Where are you going?">
+                                </div>
                             </div>
-                        </div>
-                        <div class="input-field">
-                            <label for="inMinPrice">Min Price</label>
-                            <div class="input-field-inline">
-                                <span class="material-symbols-outlined icon">currency_rupee</span>
-                                <input id="inMinPrice" type="number" th:field="*{minPrice}" min="0" placeholder="1000">
+                            <div class="input-field">
+                                <label class="label" for="inMinPrice">Min Price</label>
+                                <div class="input-field-inline">
+                                    <span class="material-symbols-outlined icon">currency_rupee</span>
+                                    <input class="input" id="inMinPrice" type="number" th:field="*{minPrice}" min="0" placeholder="1000">
+                                </div>
                             </div>
-                        </div>
-                        <div class="input-field">
-                            <label for="inMaxPrice">Max Price</label>
-                            <div class="input-field-inline">
-                                <span class="material-symbols-outlined icon">currency_rupee</span>
-                                <input id="inMaxPrice" type="number" th:field="*{maxPrice}" min="0" placeholder="10000">
+                            <div class="input-field">
+                                <label class="label" for="inMaxPrice">Max Price</label>
+                                <div class="input-field-inline">
+                                    <span class="material-symbols-outlined icon">currency_rupee</span>
+                                    <input class="input" id="inMaxPrice" type="number" th:field="*{maxPrice}" min="0" placeholder="10000">
+                                </div>
                             </div>
-                        </div>
-                        <div class="input-field">
-                            <label for="inGuests">Guests</label>
-                            <div class="input-field-inline">
-                                <span class="material-symbols-outlined icon">person</span>
-                                <input id="inGuests" type="number" th:field="*{guests}" min="1" placeholder="Number of guests">
+                            <div class="input-field">
+                                <label class="label" for="inGuests">Guests</label>
+                                <div class="input-field-inline">
+                                    <span class="material-symbols-outlined icon">person</span>
+                                    <input class="input" id="inGuests" type="number" th:field="*{guests}" min="1" placeholder="Number of guests">
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit"><span class="material-symbols-outlined icon">search</span></button>
-                        </div>
-                    </form>
-                </div>
-                <div class="popular-destinations">
-                    <h2 class="title">Popular destinations</h2>
-                    <div class="destination-grid">
-                        <a th:href="@{/hotels/search?city=Puducherry}" class="destination-card destination-1">
-                            <img th:src="@{/assets/images/puducherry.webp}" alt="Historic architecture in Copenhagen" loading="lazy">
-                            <span class="destination-name">Puducherry</span>
-                        </a>
-                        <a th:href="@{/hotels/search?city=Chennai}" class="destination-card destination-2">
-                            <img th:src="@{/assets/images/chennai.jpg}" alt="London streets and landmarks" loading="lazy">
-                            <span class="destination-name">Chennai</span>
-                        </a>
-                        <a th:href="@{/hotels/search?city=Bengalure}" class="destination-card destination-3">
-                            <img th:src="@{/assets/images/bangalore.webp}" alt="Historic streets of Lisbon" loading="lazy">
-                            <span class="destination-name">Bengalure</span>
-                        </a>
-                        <a th:href="@{/hotels/search?city=Mumbai}" class="destination-card destination-4">
-                            <img th:src="@{/assets/images/mumbai.webp}" alt="Coastal town in Croatia" loading="lazy">
-                            <span class="destination-name">Mumbai</span>
-                        </a>
-                        <a th:href="@{/hotels/search?city=Kochin}" class="destination-card destination-5">
-                            <img th:src="@{/assets/images/kochin.jpg}" alt="City architecture" loading="lazy">
-                            <span class="destination-name">Kochin</span>
-                        </a>
-                        <a th:href="@{/hotels/search?city=Goa}" class="destination-card destination-6">
-                            <img th:src="@{/assets/images/goa.jpg}" alt="Historic architecture in Copenhagen" loading="lazy">
-                            <span class="destination-name">Goa</span>
-                        </a>
+                            <div class="form-actions">
+                                <button class="btn btn-icon" type="submit"><span class="material-symbols-outlined icon">search</span></button>
+                            </div>
+                        </form>
                     </div>
                 </div>
+                <section class="section section-home-destination">
+                    <div class="home-destination-container">
+                        <div class="home-destination-header">
+                            <h2 class="title destination-title">Popular destinations</h2>
+                            <a class="link" th:href="@{/hotels/search}">See all<span class="material-symbols-outlined icon">chevron_right</span></a>
+                        </div>
+                        <div class="home-destination-content">
+                            <a class="destination-card card-1" th:href="@{/hotels/search?destination=Puducherry}">
+                                <img class="destination-image" th:src="@{/assets/images/puducherry.webp}" alt="Puducherry" loading="lazy">
+                                <span class="destination-name">Puducherry</span>
+                            </a>
+                            <a class="destination-card card-2" th:href="@{/hotels/search?destination=Chennai}">
+                                <img class="destination-image" th:src="@{/assets/images/chennai.jpg}" alt="Chennai" loading="lazy">
+                                <span class="destination-name">Chennai</span>
+                            </a>
+                            <a class="destination-card card-3" th:href="@{/hotels/search?destination=Mumbai}">
+                                <img class="destination-image" th:src="@{/assets/images/mumbai.jpg}" alt="Mumbai" loading="lazy">
+                                <span class="destination-name">Mumbai</span>
+                            </a>
+                            <a class="destination-card card-4" th:href="@{/hotels/search?destination=Bengalure}">
+                                <img class="destination-image" th:src="@{/assets/images/bengalure.jpg}" alt="Bengalure" loading="lazy">
+                                <span class="destination-name">Bengalure</span>
+                            </a>
+                            <a class="destination-card card-5" th:href="@{/hotels/search?destination=Kochin}">
+                                <img class="destination-image" th:src="@{/assets/images/kochin.jpg}" alt="Kochin" loading="lazy">
+                                <span class="destination-name">Kochin</span>
+                            </a>
+                            <a class="destination-card card-6" th:href="@{/hotels/search?destination=Goa}">
+                                <img class="destination-image" th:src="@{/assets/images/goa.jpg}" alt="Goa" loading="lazy">
+                                <span class="destination-name">Goa</span>
+                            </a>
+                        </div>
+                    </div>
+                </section>
             </section>
         </main>
     </div>

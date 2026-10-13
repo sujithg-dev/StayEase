@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <script defer th:src="@{/js/main.js}"></script>
+    <script defer th:src="@{/js/sidebar-toggle.js}"></script>
 </head>
 
 <body>
@@ -26,7 +27,7 @@
                 <div class="back-wrapper">
                     <a class="back-button" th:href="@{/manager/bookings}"><span class="material-symbols-outlined">arrow_back</span></a>
                 </div>
-                <div class="booking-confirmation">
+                <div class="booking-details-container ">
                     <div class="header">
                         <h1 class="title">Booking Details</h1>
                     </div>

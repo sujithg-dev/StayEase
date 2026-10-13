@@ -20,11 +20,11 @@
     <div class="container">
         <div th:replace="~{fragments/customer-topbar :: customer-topbar}"></div>
         <main class="main-content">
-            <section class="section">
+            <section class="section section-booking-details">
                 <div class="back-wrapper">
                     <a class="back-button" th:href="@{/bookings}"><span class="material-symbols-outlined">arrow_back</span></a>
                 </div>
-                <div class="booking-confirmation">
+                <div class="booking-details-container">
                     <div class="header">
                         <h1 class="status confirmed" th:if="${booking.bookingStatus.name() == 'CONFIRMED'}">Booking Confirmed</h1>
                         <h1 class="status confirmed" th:if="${booking.bookingStatus.name() == 'COMPLETED'}">Booking Confirmed</h1>

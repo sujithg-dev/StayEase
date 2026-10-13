@@ -169,6 +169,7 @@ public class BookingService
         booking.setHotelId(hotel.getHotelId());
         booking.setHotelName(hotel.getHotelName());
         booking.setRoomId(room.getRoomId());
+        booking.setRoomName(room.getRoomName());
         booking.setRoomType(room.getRoomType());
         booking.setCheckInDate(checkIn);
         booking.setCheckOutDate(checkOut);

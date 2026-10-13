@@ -129,10 +129,21 @@ public class RoomService
 
     public Double getStartingPrice(String hotelId)
     {
-        return roomRepository.findByHotelId(hotelId).stream()
+        return roomRepository.findByHotelId(hotelId)
+                .stream()
                 .map(Room::getRoomPrice)
                 .filter(Objects::nonNull)
                 .min(Double::compareTo)
+                .orElse(null);
+    }
+
+    public Double getHighestrice(String hotelId)
+    {
+        return roomRepository.findByHotelId(hotelId)
+                .stream()
+                .map(Room::getRoomPrice)
+                .filter(Objects::nonNull)
+                .max(Double::compareTo)
                 .orElse(null);
     }
 }

@@ -20,7 +20,7 @@
     <div class="container">
         <div th:replace="~{fragments/customer-topbar :: customer-topbar}"></div>
         <main class="main-content">
-            <section class="section">
+            <section class="section section-bookinds">
                 <div class="back-wrapper">
                     <a class="back-button" th:href="@{/home}"><span class="material-symbols-outlined">arrow_back</span></a>
                 </div>
@@ -28,8 +28,8 @@
                     <h2 class="title">No bookings yet!</h2>
                     <p class="subtitle">You haven’t started any booking yet. When you’ve made a booking, it will appear here.</p>
                 </div>
-                <div th:if="${!#lists.isEmpty(upcomingBookings)}">
-                    <h2 class="section-title">Upcoming Bookings</h2>
+                <div class="bookings upcomming-bookings" th:if="${!#lists.isEmpty(upcomingBookings)}">
+                    <h1 class="booking-title">Upcoming Bookings</h1>
                     <div class="booking-cards" >
                         <div class="booking-card" th:each="booking : ${upcomingBookings}">
                             <div class="header">
@@ -72,18 +72,18 @@
                             </div>
                             <div class="booking-actions">
                                 <a class="btn btn-primary" th:if="${booking.bookingStatus.name() == 'PENDING_PAYMENT'}" th:href="@{/payment/create(bookingId=${booking.bookingId})}">Pay Now</a>
-                                <a class="btn btn-primary" th:if="${(booking.bookingStatus.name() == 'CONFIRMED' or booking.bookingStatus.name() == 'COMPLETED') and booking.checkOutDate != null and !booking.checkOutDate.isAfter( T(java.time.LocalDate).now() )}"  th:href="@{/review/create( bookingId=${booking.bookingId})}">Review Hotel</a>
-                                <a class="btn btn-primary" th:href="@{/bookings/{id}(id=${booking.bookingId})}">View Booking</a>
+                                <a class="btn btn-primary" th:if="${(booking.bookingStatus.name() == 'CONFIRMED' or booking.bookingStatus.name() == 'COMPLETED') and booking.checkOutDate != null and !booking.checkOutDate.isAfter( T(java.time.LocalDate).now() )}"  th:href="@{/review/create( bookingId=${booking.bookingId})}">Review</a>
+                                <a class="btn btn-primary" th:href="@{/bookings/{id}(id=${booking.bookingId})}">View</a>
                                 <form th:if="${booking.bookingStatus.name() == 'CONFIRMED' and booking.checkInDate != null and T(java.time.LocalDate).now().isBefore(booking.checkInDate)}" th:action="@{/bookings/cancel/{id}(id=${booking.bookingId})}" method="post">
                                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                                    <button class="btn btn-danger" type="submit" onclick="return confirm('Are you sure you want to cancel this booking?');">Cancel Booking</button>
+                                    <button class="btn btn-danger" type="submit" onclick="return confirm('Are you sure you want to cancel this booking?');">Cancel</button>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div th:if="${!#lists.isEmpty(otherBookings)}">
-                    <h2 class="section-title">Past Bookings</h2>
+                <div class="bookings past-bookings" th:if="${!#lists.isEmpty(otherBookings)}">
+                    <h1 class="booking-title">My Bookings</h1>
                     <div class="booking-cards">
                         <div class="booking-card" th:each="booking : ${otherBookings}">
                             <div class="header">
@@ -100,11 +100,11 @@
                             </div>
                             <div class="booking-actions">
                                 <a class="btn btn-primary" th:if="${booking.bookingStatus.name() == 'PENDING_PAYMENT'}" th:href="@{/payment/create(bookingId=${booking.bookingId})}">Pay Now</a>
-                                <a class="btn btn-primary" th:if="${(booking.bookingStatus.name() == 'CONFIRMED' or booking.bookingStatus.name() == 'COMPLETED') and booking.checkOutDate != null and !booking.checkOutDate.isAfter( T(java.time.LocalDate).now() )}"  th:href="@{/review/create( bookingId=${booking.bookingId})}">Review Hotel</a>
-                                <a class="btn btn-primary" th:href="@{/bookings/{id}(id=${booking.bookingId})}">View Booking</a>
+                                <a class="btn btn-primary" th:if="${(booking.bookingStatus.name() == 'CONFIRMED' or booking.bookingStatus.name() == 'COMPLETED') and booking.checkOutDate != null and !booking.checkOutDate.isAfter( T(java.time.LocalDate).now() )}"  th:href="@{/review/create( bookingId=${booking.bookingId})}">Review</a>
+                                <a class="btn btn-primary" th:href="@{/bookings/{id}(id=${booking.bookingId})}">View</a>
                                 <form th:if="${booking.bookingStatus.name() == 'CONFIRMED' and booking.checkInDate != null and T(java.time.LocalDate).now().isBefore(booking.checkInDate)}" th:action="@{/bookings/cancel/{id}(id=${booking.bookingId})}" method="post">
                                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                                    <button class="btn btn-danger" type="submit" onclick="return confirm('Are you sure you want to cancel this booking?');">Cancel Booking</button>
+                                    <button class="btn btn-danger" type="submit" onclick="return confirm('Are you sure you want to cancel this booking?');">Cancel</button>
                                 </form>
                             </div>
                         </div>

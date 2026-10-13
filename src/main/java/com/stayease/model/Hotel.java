@@ -19,10 +19,6 @@ public class Hotel
 
     private String managerId;
 
-    private String managerName;
-
-    private String managerEmail;
-
     @NotBlank(message = "Hotel name is required")
     private String hotelName;
 
@@ -73,7 +69,16 @@ public class Hotel
     private List<String> hotelImages = new ArrayList<>();
 
     @Transient
+    private String managerName;
+
+    @Transient
+    private String managerEmail;
+
+    @Transient
     private Double startingPrice;
+
+    @Transient
+    private Double highestPrice;
 
     public enum HotelStatus
     {
@@ -95,7 +100,7 @@ public class Hotel
         SPA("Spa"),
         LAUNDRY("Laundry"),
         PET_FRIENDLY("Pet Friendly"),
-        FRONT_DESK_24_HOURS("24Hr Front Desk"),
+        FRONT_DESK_24_HOURS("24/7 Front Desk"),
         BEACH_ACCESS("Beach Access");
 
         private final String displayName;

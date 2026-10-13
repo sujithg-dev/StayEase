@@ -7,7 +7,6 @@
     max-width: 1000px;
 }
 
-
 /* Profile Card */
 .profile-card {
     padding: var(--24px);
@@ -16,7 +15,9 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    box-shadow: var(--card-shadow);
+    background: var(--bg);
+    border: 1px solid var(--border-light);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     border-radius: var(--24px);
 }
 
@@ -56,19 +57,28 @@
     display: flex;
     flex-direction: column;
     gap: var(--24px);
-    box-shadow: var(--card-shadow);
+    background: var(--bg);
+    border: 1px solid var(--border-light);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     border-radius: var(--24px);
 }
 
 
-/* Change password Form */
-.password-form {
-    margin: auto;
-    padding: var(--48px);
-    display: flex;
-    flex-direction: column;
-    gap: var(--24px);
-    max-width: 600px;
-    box-shadow: var(--card-shadow);
-    border-radius: var(--24px);
+/* ===================== Responsive ===================== */
+
+@media (max-width: 900px) {
+    .profile-container {
+        grid-template-columns: 1fr;
+        max-width: 600px;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-card {
+        padding: var(--18px);
+    }
+
+    .profile-card .user-email {
+        overflow-wrap: anywhere;
+    }
 }

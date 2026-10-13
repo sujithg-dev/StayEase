@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <script defer th:src="@{/js/main.js}"></script>
+    <script defer th:src="@{/js/sidebar-toggle.js}"></script>
 </head>
 
 <body>
@@ -32,23 +33,24 @@
                             <img class="hotel-image" th:src="${hotel.hotelCoverImage}" th:alt="${hotel.hotelName}">
                         </div>
                         <div class="hotel-details">
-                            <h2 class="hotel-status" th:classappend="${hotel.hotelStatus.name() == 'ACTIVE' ? 'active' : 'inactive'}" th:text="${#strings.capitalize(hotel.hotelStatus.name().toLowerCase())}"></h2>
+                            <span class="hotel-status status-badge status-active" th:if="${hotel.hotelStatus.name() == 'ACTIVE'}">Active</span>
+                            <span class="hotel-status status-badge status-inactive" th:if="${hotel.hotelStatus.name() == 'INACTIVE'}">Inactive</span>
                             <div class="title">
                                 <h2 class="hotel-name" th:text="${hotel.hotelName}"></h2>
                                 <div class="hotel-rating">
-                                    <div class="rating rating-excellent" th:if="${hotel.hotelRating >= 4}">
+                                    <div class="status-badge status-excellent" th:if="${hotel.hotelRating >= 4}">
                                         <span class="material-symbols-outlined icon">star_rate_half</span>
                                         <span class="rating-text" th:text="${hotel.hotelRating}"></span>
                                     </div>
-                                    <div class="rating rating-good" th:if="${hotel.hotelRating >= 3 and hotel.hotelRating < 4}">
+                                    <div class="status-badge status-good" th:if="${hotel.hotelRating >= 3 and hotel.hotelRating < 4}">
                                         <span class="material-symbols-outlined icon">star_rate_half</span>
                                         <span class="rating-text" th:text="${hotel.hotelRating}"></span>
                                     </div>
-                                    <div class="rating rating-average" th:if="${hotel.hotelRating >= 2 and hotel.hotelRating < 3}">
+                                    <div class="" th:if="${hotel.hotelRating >= 2 and hotel.hotelRating < 3}">
                                         <span class="material-symbols-outlined icon">star_rate_half</span>
                                         <span class="rating-text" th:text="${hotel.hotelRating}"></span>
                                     </div>
-                                    <div class="rating rating-bad" th:if="${hotel.hotelRating < 2}">
+                                    <div class="status-badge status-bad" th:if="${hotel.hotelRating < 2}">
                                         <span class="material-symbols-outlined icon">star_rate_half</span>
                                         <span class="rating-text" th:text="${hotel.hotelRating}"></span>
                                     </div>
@@ -65,10 +67,10 @@
                             </div>
                         </div>
                         <div class="hotel-actions">
-                            <a class="btn btn-primary" th:href="@{/manager/hotels/{hotelId}/rooms(hotelId=${hotel.hotelId})}">Manage</a>
-                            <a class="btn btn-primary" th:href="@{/manager/hotels/edit/{id} (id=${hotel.hotelId})}">Edit</a>
+                            <a class="btn btn-primary" th:href="@{/manager/hotels/{hotelId}/rooms(hotelId=${hotel.hotelId})}"><span class="material-symbols-outlined icon">settings</span></a>
+                            <a class="btn btn-secondary" th:href="@{/manager/hotels/edit/{id} (id=${hotel.hotelId})}"><span class="material-symbols-outlined icon">edit</span></a>
                             <form th:action="@{/manager/hotels/delete/{hotelId}(hotelId=${hotel.hotelId})}" method="post" onsubmit="return confirm('Delete this hotel?');">
-                                <button class="btn btn-danger" type="submit">Delete</button>
+                                <button class="btn btn-danger" type="submit"><span class="material-symbols-outlined icon">delete</span></button>
                             </form>
                         </div>
                     </div>

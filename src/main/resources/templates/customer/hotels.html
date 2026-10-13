@@ -14,129 +14,128 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <script defer th:src="@{/js/main.js}"></script>
+    <script defer th:src="@{/js/hotel-filter-toggle.js}"></script>
 </head>
 
 <body>
     <div class="container">
         <div th:replace="~{fragments/customer-topbar :: customer-topbar}"></div>
         <main class="main-content">
-            <section class="section">
+            <section class="section section-hotels">
                 <div class="back-wrapper">
                     <a class="back-button" th:href="@{/home}"><span class="material-symbols-outlined">arrow_back</span></a>
                 </div>
                 <div class="empty-box" th:if="${#lists.isEmpty(hotels)}">
-                    <h2 class="title">No hotels found!</h2>
+                    <h1 class="title">No hotels found!</h1>
                     <p class="subtitle">Added hotels list will appear here.</p>
                 </div>
-                <div class="section-hotels" th:if="${!#lists.isEmpty(hotels)}">
+                <div class="hotels-container" th:if="${!#lists.isEmpty(hotels)}">
                     <div class="hotel-filters">
-                        <form class="form form-filter" id="hotelSearchForm" th:action="@{/hotels/search}" th:object="${searchRequest}" method="get">
+                        <form class="form form-hotel-filters" id="hotelSearchForm" th:action="@{/hotels/search}" th:object="${searchRequest}" method="get">
                             <div class="filter-card search-filter">
-                                <h3 class="title">Search Hotels</h3>
+                                <h2 class="filter-card-title">Search Hotels</h2>
                                 <div class="filter-items input-group">
                                     <div class="input-field">
-                                        <label for="inLocation">Destination</label>
+                                        <label class="label" for="inLocation">Destination</label>
                                         <div class="input-field-inline">
                                             <span class="material-symbols-outlined icon">location_on</span>
-                                            <input id="inLocation" type="text" th:field="*{city}" placeholder="Where do you want to go?">
+                                            <input class="input" id="inLocation" type="text" th:field="*{destination}" placeholder="Where do you want to go?">
                                         </div>
                                     </div>
                                     <div class="input-field">
-                                        <label for="inMinPrice">Min Price</label>
+                                        <label class="label" for="inMinPrice">Min Price</label>
                                         <div class="input-field-inline">
                                             <span class="material-symbols-outlined icon">currency_rupee</span>
-                                            <input id="inMinPrice" type="number" th:field="*{minPrice}" min="0" placeholder="1000">
+                                            <input class="input" id="inMinPrice" type="number" th:field="*{minPrice}" min="0" placeholder="1000">
                                         </div>
                                     </div>
                                     <div class="input-field">
-                                        <label for="inMaxPrice">Max Price</label>
+                                        <label class="label" for="inMaxPrice">Max Price</label>
                                         <div class="input-field-inline">
                                             <span class="material-symbols-outlined icon">currency_rupee</span>
-                                            <input id="inMaxPrice" type="number" th:field="*{maxPrice}" min="0" placeholder="10000">
+                                            <input class="input" id="inMaxPrice" type="number" th:field="*{maxPrice}" min="0" placeholder="10000">
                                         </div>
                                     </div>
                                     <div class="input-field">
-                                        <label for="inGuests">Guests</label>
+                                        <label class="label" for="inGuests">Guests</label>
                                         <div class="input-field-inline">
                                             <span class="material-symbols-outlined icon">person</span>
-                                            <input id="inGuests" type="number" th:field="*{guests}" min="1" placeholder="Number of guests">
+                                            <input class="input" id="inGuests" type="number" th:field="*{guests}" min="1" placeholder="Number of guests">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="filter-card amenity-filter">
-                                <h2 class="title">Hotel Amenities</h2>
+                                <h2 class="filter-card-title">Hotel Amenities</h2>
                                 <div class="filter-items">
                                     <label class="filter-item" th:each="amenity : ${amenities}">
-                                        <input type="checkbox" th:field="*{amenities}" th:value="${amenity.displayName}">
-                                        <span th:text="${amenity.displayName}"></span>
+                                        <input class="input radio" type="checkbox" th:field="*{amenities}" th:value="${amenity.displayName}">
+                                        <span class="value" th:text="${amenity.displayName}"></span>
                                     </label>
                                 </div>
                             </div>
                             <div class="filter-card rating-filter">
-                                <h2 class="title">Hotel Ratings</h2>
+                                <h2 class="filter-card-title">Hotel Ratings</h2>
                                 <div class="filter-items">
                                     <label class="filter-item">
-                                        <input type="radio" th:field="*{minRating}" value="5">
-                                        <span>5 ★</span>
+                                        <input class="input radio" type="radio" th:field="*{minRating}" value="5">
+                                        <span class="value">5 ★</span>
                                     </label>
                                     <label class="filter-item">
-                                        <input type="radio" th:field="*{minRating}" value="4">
+                                        <input class="input radio" type="radio" th:field="*{minRating}" value="4">
                                         <span>4 ★ & up</span>
                                     </label>
                                     <label class="filter-item">
-                                        <input type="radio" th:field="*{minRating}" value="3">
+                                        <input class="input radio" type="radio" th:field="*{minRating}" value="3">
                                         <span>3 ★ & up</span>
                                     </label>
                                     <label class="filter-item">
-                                        <input type="radio" th:field="*{minRating}" value="2">
+                                        <input class="input radio" type="radio" th:field="*{minRating}" value="2">
                                         <span>2 ★ & up</span>
                                     </label>
                                     <label class="filter-item">
-                                        <input type="radio" th:field="*{minRating}" value="1">
+                                        <input class="input radio" type="radio" th:field="*{minRating}" value="1">
                                         <span>1 ★ & up</span>
                                     </label>
                                 </div>
                             </div>
                         </form>
                     </div>
-                    <div class="hotel-container">
-                        <div class="hotel-header">
-                            <div>
-                                <div class="filter-summary" th:if="${(searchRequest.city != null and !#strings.isEmpty(#strings.trim(searchRequest.city))) or searchRequest.minPrice != null or searchRequest.maxPrice != null or searchRequest.guests != null or searchRequest.minRating != null or (searchRequest.amenities != null and !#lists.isEmpty(searchRequest.amenities))}">
-                                    <span class="filter-summary-text" th:text="${#lists.size(hotels) + ' hotels found for'}"></span>
-                                    <div class="filter-summary-items">
-                                        <span class="filter-chip" th:if="${searchRequest.city != null and !#strings.isEmpty(#strings.trim(searchRequest.city))}">
-                                            <span class="filter" th:text="${searchRequest.city}"></span>
-                                            <a class="remove-filter" th:href="@{/hotels/search( minPrice=${searchRequest.minPrice}, maxPrice=${searchRequest.maxPrice}, guests=${searchRequest.guests}, minRating=${searchRequest.minRating},amenities=${searchRequest.amenities})}"><span class="material-symbols-outlined icon">close</span></a>
-                                        </span>
-                                        <span class="filter-chip" th:if="${searchRequest.minPrice != null}">
-                                            <span class="filter" th:text="${'₹' + #numbers.formatDecimal(searchRequest.minPrice, 0, 0) + ' min'}"></span>
-                                            <a class="remove-filter" th:href="@{/hotels/search( city=${searchRequest.city}, maxPrice=${searchRequest.maxPrice}, guests=${searchRequest.guests}, minRating=${searchRequest.minRating}, amenities=${searchRequest.amenities})}"><span class="material-symbols-outlined icon">close</span></a>
-                                        </span>
-                                        <span class="filter-chip" th:if="${searchRequest.maxPrice != null}">
-                                            <span class="filter" th:text="${'₹' + #numbers.formatDecimal(searchRequest.maxPrice, 0, 0) + ' max'}"></span>
-                                            <a class="remove-filter" th:href="@{/hotels/search( city=${searchRequest.city}, minPrice=${searchRequest.minPrice}, guests=${searchRequest.guests}, minRating=${searchRequest.minRating}, amenities=${searchRequest.amenities})}"><span class="material-symbols-outlined icon">close</span></a>
-                                        </span>
-                                        <span class="filter-chip" th:if="${searchRequest.guests != null}">
-                                            <span class="filter" th:text="${searchRequest.guests + ' guests'}"></span>
-                                            <a class="remove-filter" th:href="@{/hotels/search( city=${searchRequest.city}, minPrice=${searchRequest.minPrice}, maxPrice=${searchRequest.maxPrice}, minRating=${searchRequest.minRating},  amenities=${searchRequest.amenities})}"><span class="material-symbols-outlined icon">close</span></a>
-                                        </span>
-                                        <span class="filter-chip" th:each="amenity : ${searchRequest.amenities}" th:if="${searchRequest.amenities != null}">
-                                            <span class="filter" th:text="${amenity}"></span>
-                                            <a class="remove-filter" th:href="@{/hotels/search( city=${searchRequest.city}, minPrice=${searchRequest.minPrice},maxPrice=${searchRequest.maxPrice}, guests=${searchRequest.guests}, minRating=${searchRequest.minRating})}"><span class="material-symbols-outlined icon">close</span></a>
-                                        </span>
-                                        <span class="filter-chip" th:if="${searchRequest.minRating != null}">
-                                            <span class="filter" th:if="${searchRequest.minRating == 5}" th:text="${#numbers.formatDecimal(searchRequest.minRating, 0, 0) + ' ★'}"></span>
-                                            <span class="filter" th:if="${searchRequest.minRating < 5}" th:text="${#numbers.formatDecimal(searchRequest.minRating, 0, 0) + ' ★ & up'}"></span>
-                                            <a class="remove-filter" th:href="@{/hotels/search( city=${searchRequest.city}, minPrice=${searchRequest.minPrice}, maxPrice=${searchRequest.maxPrice}, guests=${searchRequest.guests}, amenities=${searchRequest.amenities})}"><span class="material-symbols-outlined icon">close</span></a>
-                                        </span>
-                                    </div>
+                    <div class="hotel-list">
+                        <div class="hotel-list-header">
+                            <div class="filter-summary" th:if="${(searchRequest.destination != null  and !#strings.isEmpty(#strings.trim(searchRequest.destination)))  or searchRequest.minPrice != null  or searchRequest.maxPrice != null  or searchRequest.guests != null  or searchRequest.minRating != null  or (searchRequest.amenities != null  and !#lists.isEmpty(searchRequest.amenities))}">
+                                <span class="filter-summary-text" th:text="${#lists.size(hotels) + ' hotels found for'}"></span>
+                                <div class="filter-summary-items">
+                                    <span class="filter-chip" th:if="${searchRequest.destination != null and !#strings.isEmpty(#strings.trim(searchRequest.destination))}">
+                                        <span class="filter" th:text="${searchRequest.destination}"></span>
+                                        <a class="remove-filter" th:href="@{/hotels/search( minPrice=${searchRequest.minPrice}, maxPrice=${searchRequest.maxPrice}, guests=${searchRequest.guests}, minRating=${searchRequest.minRating},amenities=${searchRequest.amenities})}"><span class="material-symbols-outlined icon">close</span></a>
+                                    </span>
+                                    <span class="filter-chip" th:if="${searchRequest.minPrice != null}">
+                                        <span class="filter" th:text="${'₹' + #numbers.formatDecimal(searchRequest.minPrice, 0, 0) + ' min'}"></span>
+                                        <a class="remove-filter" th:href="@{/hotels/search(destination=${searchRequest.destination}, maxPrice=${searchRequest.maxPrice}, guests=${searchRequest.guests}, minRating=${searchRequest.minRating}, amenities=${searchRequest.amenities})}"><span class="material-symbols-outlined icon">close</span></a>
+                                    </span>
+                                    <span class="filter-chip" th:if="${searchRequest.maxPrice != null}">
+                                        <span class="filter" th:text="${'₹' + #numbers.formatDecimal(searchRequest.maxPrice, 0, 0) + ' max'}"></span>
+                                        <a class="remove-filter" th:href="@{/hotels/search(destination=${searchRequest.destination}, minPrice=${searchRequest.minPrice}, guests=${searchRequest.guests}, minRating=${searchRequest.minRating}, amenities=${searchRequest.amenities})}"><span class="material-symbols-outlined icon">close</span></a>
+                                    </span>
+                                    <span class="filter-chip" th:if="${searchRequest.guests != null}">
+                                        <span class="filter" th:text="${searchRequest.guests + ' guests'}"></span>
+                                        <a class="remove-filter" th:href="@{/hotels/search(destination=${searchRequest.destination}, minPrice=${searchRequest.minPrice}, maxPrice=${searchRequest.maxPrice}, minRating=${searchRequest.minRating},  amenities=${searchRequest.amenities})}"><span class="material-symbols-outlined icon">close</span></a>
+                                    </span>
+                                    <span class="filter-chip" th:each="amenity : ${searchRequest.amenities}" th:if="${searchRequest.amenities != null}">
+                                        <span class="filter" th:text="${amenity}"></span>
+                                        <a class="remove-filter" th:href="@{/hotels/search(destination=${searchRequest.destination}, minPrice=${searchRequest.minPrice},maxPrice=${searchRequest.maxPrice}, guests=${searchRequest.guests}, minRating=${searchRequest.minRating})}"><span class="material-symbols-outlined icon">close</span></a>
+                                    </span>
+                                    <span class="filter-chip" th:if="${searchRequest.minRating != null}">
+                                        <span class="filter" th:if="${searchRequest.minRating == 5}" th:text="${#numbers.formatDecimal(searchRequest.minRating, 0, 0) + ' ★'}"></span>
+                                        <span class="filter" th:if="${searchRequest.minRating < 5}" th:text="${#numbers.formatDecimal(searchRequest.minRating, 0, 0) + ' ★ & up'}"></span>
+                                        <a class="remove-filter" th:href="@{/hotels/search(destination=${searchRequest.destination}, minPrice=${searchRequest.minPrice}, maxPrice=${searchRequest.maxPrice}, guests=${searchRequest.guests}, amenities=${searchRequest.amenities})}"><span class="material-symbols-outlined icon">close</span></a>
+                                    </span>
                                 </div>
                             </div>
-                            <div class="sort-field">
-                                <label for="sortBy">Sort by</label>
-                                <select id="sortBy" class="input select" onchange="changeSort()">
+                            <div class="hotel-sort-field">
+                                <label class="label" for="sortBy">Sort by</label>
+                                <select class="input select" id="sortBy" onchange="changeSort()">
                                     <option value="recommended" selected th:selected="${sortBy == 'recommended'}">Recommended</option>
                                     <option value="priceDesc" th:selected="${sortBy == 'priceDesc'}">Price: High to Low</option>
                                     <option value="priceAsc" th:selected="${sortBy == 'priceAsc'}">Price: Low to High</option>
@@ -147,7 +146,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="hotel-list">
+                        <div class="hotel-content">
                             <div class="empty-box" th:if="${#lists.isEmpty(searchHotels)}">
                                 <h2 class="title">No hotels found!</h2>
                                 <p class="subtitle">Try changing your search filters.</p>
@@ -157,25 +156,6 @@
                                     <img class="hotel-image" th:src="${hotel.hotelCoverImage}" th:alt="${hotel.hotelName}">
                                 </div>
                                 <div class="hotel-details">
-                                    <div class="hotel-rating">
-                                        <div class="rating rating-excellent" th:if="${hotel.hotelRating >= 4}">
-                                            <span class="material-symbols-outlined icon">star_rate_half</span>
-                                            <span class="rating-text" th:text="${hotel.hotelRating}"></span>
-                                        </div>
-                                        <div class="rating rating-good" th:if="${hotel.hotelRating >= 3 and hotel.hotelRating < 4}">
-                                            <span class="material-symbols-outlined icon">star_rate_half</span>
-                                            <span class="rating-text" th:text="${hotel.hotelRating}"></span>
-                                        </div>
-                                        <div class="rating rating-average" th:if="${hotel.hotelRating >= 2 and hotel.hotelRating < 3}">
-                                            <span class="material-symbols-outlined icon">star_rate_half</span>
-                                            <span class="rating-text" th:text="${hotel.hotelRating}"></span>
-                                        </div>
-                                        <div class="rating rating-bad" th:if="${hotel.hotelRating < 2}">
-                                            <span class="material-symbols-outlined icon">star_rate_half</span>
-                                            <span class="rating-text" th:text="${hotel.hotelRating}"></span>
-                                        </div>
-                                        <span class="review-count"></span>
-                                    </div>
                                     <h2 class="hotel-name" th:text="${hotel.hotelName}"></h2>
                                     <div class="hotel-location">
                                         <span class="material-symbols-outlined icon">location_on</span>
@@ -185,14 +165,35 @@
                                     <div class="hotel-amenities" th:if="${hotel.hotelAmenities != null}">
                                         <span class="amenity" th:each="hotelAmenity, stat : ${hotel.hotelAmenities}" th:if="${stat.index < 8}" th:text="${hotelAmenity}"></span>
                                     </div>
-                                    <div class="hotel-actions">
-                                        <a class="btn btn-primary" th:href="@{/hotels/{id}(id=${hotel.hotelId})}">See booking options</a>
+                                    <div class="hotel-rating">
+                                        <div class="status-badge status-excellent" th:if="${hotel.hotelRating >= 4}">
+                                            <span class="material-symbols-outlined icon">star_rate_half</span>
+                                            <span class="data" th:text="${hotel.hotelRating}"></span>
+                                        </div>
+                                        <div class="status-badge status-good" th:if="${hotel.hotelRating >= 3 and hotel.hotelRating < 4}">
+                                            <span class="material-symbols-outlined icon">star_rate_half</span>
+                                            <span class="data" th:text="${hotel.hotelRating}"></span>
+                                        </div>
+                                        <div class="status-badge status-average" th:if="${hotel.hotelRating >= 2 and hotel.hotelRating < 3}">
+                                            <span class="material-symbols-outlined icon">star_rate_half</span>
+                                            <span class="data" th:text="${hotel.hotelRating}"></span>
+                                        </div>
+                                        <div class="status-badge status-bad" th:if="${hotel.hotelRating < 2}">
+                                            <span class="material-symbols-outlined icon">star_rate_half</span>
+                                            <span class="data" th:text="${hotel.hotelRating}"></span>
+                                        </div>
                                     </div>
                                     <div class="hotel-price" th:if="${hotel.startingPrice != null}">
                                         <small class="text">Starting from</small>
                                         <strong class="price" th:text="${'₹' + #numbers.formatDecimal(hotel.startingPrice, 0, 0)}"></strong>
                                         <span class="unit">/ night</span>
                                     </div>
+                                    <div class="hotel-actions">
+                                        <a class="btn btn-primary" th:href="@{/hotels/{id}(id=${hotel.hotelId})}">See booking options<span class="material-symbols-outlined icon">arrow_right_alt</span></a>
+                                    </div>
+                                </div>
+                                <div class="hotel-span">
+
                                 </div>
                             </div>
                         </div>
@@ -201,7 +202,7 @@
                                page=${currentPage - 1},
                                size=${size},
                                sortBy=${sortBy},
-                               city=${searchRequest.city},
+                               destination=${searchRequest.destination},
                                minRating=${searchRequest.minRating},
                                minPrice=${searchRequest.minPrice},
                                maxPrice=${searchRequest.maxPrice},
@@ -213,7 +214,7 @@
                                page=${i},
                                size=${size},
                                sortBy=${sortBy},
-                               city=${searchRequest.city},
+                               destination=${searchRequest.destination},
                                minRating=${searchRequest.minRating},
                                minPrice=${searchRequest.minPrice},
                                maxPrice=${searchRequest.maxPrice},
@@ -224,7 +225,7 @@
                                page=${currentPage + 1},
                                size=${size},
                                sortBy=${sortBy},
-                               city=${searchRequest.city},
+                               destination=${searchRequest.destination},
                                minRating=${searchRequest.minRating},
                                minPrice=${searchRequest.minPrice},
                                maxPrice=${searchRequest.maxPrice},

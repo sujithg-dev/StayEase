@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <script defer th:src="@{/js/main.js}"></script>
+    <script defer th:src="@{/js/sidebar-toggle.js}"></script>
 </head>
 
 <body>
@@ -27,69 +28,69 @@
                 </div>
                 <div class="dashboard-stats">
                     <div class="stats-section">
-                        <h3 class="stats-heading">Hotel overview</h3>
+                        <h3 class="stats-heading">Hotel Overview</h3>
                         <div class="stats-grid">
-                            <article class="stat-card">
-                                <div class="stat-icon icon-blue"><i class="fa-solid fa-hotel"></i></div>
+                            <a class="stat-card" th:href="@{/manager/hotels}">
+                                <div class="stat-icon status-primary"><i class="fa-solid fa-hotel"></i></div>
                                 <div class="stat-info">
                                     <span class="stat-label">Total hotels</span>
                                     <strong class="stat-value" th:text="${hotelCount}"></strong>
                                 </div>
-                            </article>
-                            <article class="stat-card">
-                                <div class="stat-icon icon-green"><i class="fa-solid fa-circle-check"></i></div>
+                            </a>
+                            <a class="stat-card" th:href="@{/manager/hotels}">
+                                <div class="stat-icon status-success"><i class="fa-solid fa-circle-check"></i></div>
                                 <div class="stat-info">
                                     <span class="stat-label">Active hotels</span>
                                     <strong class="stat-value" th:text="${activeHotelCount}"></strong>
                                 </div>
-                            </article>
-                            <article class="stat-card">
-                                <div class="stat-icon icon-orange"><i class="fa-solid fa-circle-pause"></i></div>
+                            </a>
+                            <a class="stat-card" th:href="@{/manager/hotels}">
+                                <div class="stat-icon status-average"><i class="fa-solid fa-circle-pause"></i></div>
                                 <div class="stat-info">
                                     <span class="stat-label">Inactive hotels</span>
                                     <strong class="stat-value" th:text="${inactiveHotelCount}"></strong>
                                 </div>
-                            </article>
+                            </a>
                         </div>
                     </div>
                     <div class="stats-section">
-                        <h3 class="stats-heading">Booking overview</h3>
+                        <h3 class="stats-heading">Booking Overview</h3>
                         <div class="stats-grid">
-                            <article class="stat-card">
-                                <div class="stat-icon icon-blue"><i class="fas fa-calendar-alt"></i></div>
+                            <a class="stat-card" th:href="@{/manager/bookings}">
+                                <div class="stat-icon status-primary"><i class="fa-solid fa-calendar-check"></i></div>
                                 <div class="stat-info">
                                     <span class="stat-label">Total bookings</span>
-                                    <strong class="stat-value" th:text="${bookingCount}"></strong>
+                                    <strong class="stat-value" th:text="${bookingCount}">0</strong>
                                 </div>
-                            </article>
-                            <article class="stat-card">
-                                <div class="stat-icon icon-green"><i class="fa-solid fa-check-double"></i></div>
+                            </a>
+                            <a class="stat-card" th:href="@{/manager/bookings(status='CONFIRMED')}">
+                                <div class="stat-icon status-success"><i class="fa-solid fa-check-double"></i></div>
                                 <div class="stat-info">
                                     <span class="stat-label">Confirmed bookings</span>
-                                    <strong class="stat-value" th:text="${confirmedBookingCount}"></strong>
+                                    <strong class="stat-value" th:text="${confirmedBookingCount}">0</strong>
                                 </div>
-                            </article>
-                            <article class="stat-card">
-                                <div class="stat-icon icon-orange"><i class="fa-solid fa-clock"></i></div>
+                            </a>
+                            <a class="stat-card" th:href="@{/manager/bookings(status='PENDING_PAYMENT')}">
+                                <div class="stat-icon status-average"><i class="fa-solid fa-clock"></i></div>
                                 <div class="stat-info">
                                     <span class="stat-label">Pending payments</span>
-                                    <strong class="stat-value" th:text="${pendingPaymentCount}"></strong>
+                                    <strong class="stat-value" th:text="${pendingPaymentCount}">0</strong>
                                 </div>
-                            </article>
-                            <article class="stat-card">
-                                <div class="stat-icon icon-red"><i class="fa-solid fa-calendar-xmark"></i></div>
+                            </a>
+                            <a class="stat-card" th:href="@{/manager/bookings(status='CANCELLED')}">
+                                <div class="stat-icon status-failed"><i class="fa-solid fa-calendar-xmark"></i></div>
                                 <div class="stat-info">
                                     <span class="stat-label">Cancelled bookings</span>
                                     <strong class="stat-value" th:text="${cancelledBookingCount}"></strong>
                                 </div>
-                            </article>
-                            <article class="stat-card">
-                                <div class="stat-icon icon-green"><i class="fa-solid fa-calendar-check"></i></div>
+                            </a>
+                            <a class="stat-card" th:href="@{/manager/bookings(status='COMPLETED')}">
+                                <div class="stat-icon status-success"><i class="fa-solid fa-calendar-check"></i></div>
                                 <div class="stat-info">
                                     <span class="stat-label">Completed bookings</span>
                                     <strong class="stat-value" th:text="${completedBookingCount}"></strong>
                                 </div>
-                            </article>
+                            </a>
                         </div>
                     </div>
                 </div>

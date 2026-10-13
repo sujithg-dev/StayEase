@@ -1,6 +1,107 @@
-/* bookings.html */
-.section-title {
-    margin: var(--48px) 0 var(--24px);
+.details {
+    padding: var(--12px) var(--24px);
+    gap: var(--12px);
+    background: var(--bg);
+    border: 1px solid var(--border-light);
+    border-radius: var(--12px);
+}
+
+.details .row {
+    padding-block: var(--12px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.details .row:not(:last-child) {
+    border-bottom: 1px solid var(--border-light);
+}
+
+.details .row .label,
+.details .row .data {
+    font-size: var(--fs-sm);
+    font-weight: 500;
+}
+
+.details .row .data {
+    font-weight: 600;
+}
+
+.details .row>.address {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--6px);
+}
+
+.details .row .data.accent {
+    color: var(--primary);
+}
+
+
+/* Booking Form and Booking Details */
+.booking-form-container {
+    margin: auto;
+    padding: var(--48px);
+    display: flex;
+    flex-direction: column;
+    gap: var(--24px);
+    max-width: 800px;
+    border-radius: var(--24px);
+    box-shadow: var(--card-shadow);
+}
+
+.booking-form-header .subtitle {
+    margin-top: var(--4px);
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.form-hotel-booking .input {
+    padding: var(--12px) var(--24px);
+}
+
+.booking-details-container {
+    margin: auto;
+    padding: var(--48px);
+    max-width: 800px;
+    border-radius: var(--24px);
+    box-shadow: var(--card-shadow);
+}
+
+.booking-details-container .header {
+    margin-bottom: var(--24px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--6px);
+}
+
+.booking-details-container .subtitle {
+    margin-bottom: var(--12px);
+}
+
+.booking-details-container .status.confirmed {
+    color: var(--success);
+}
+
+.booking-details-container.status.cancelled {
+    color: var(--danger);
+}
+
+.booking-details-container .status.pending {
+    color: var(--warning);
+}
+
+
+/* Booking Card */
+.past-bookings {
+    margin-top: var(--48px);
+}
+
+.booking-title {
+    margin-bottom: var(--24px);
 }
 
 .booking-cards {
@@ -13,14 +114,18 @@
     padding: var(--24px);
     gap: var(--24px);
     border-radius: var(--24px);
-    box-shadow: var(--card-shadow);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    border: 1px solid var(--border-light);
 }
 
 .booking-card .header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+}
 
+.booking-card .details {
+    margin: var(--12px) 0 0;
 }
 
 .booking-card .hotel-name {
@@ -42,34 +147,6 @@
     color: var(--primary);
 }
 
-.booking-card .details {
-    margin-top: var(--24px);
-    padding: var(--24px);
-    gap: var(--12px);
-    background: var(--bg-light);
-    border-radius: var(--24px);
-}
-
-.booking-card .row {
-    padding-block: var(--12px);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.booking-card .row:not(:last-child) {
-    border-bottom: 2px solid var(--border-light);
-}
-
-.booking-card .row .label,
-.booking-card .row .data {
-    font-size: var(--fs-sm);
-}
-
-.booking-card .row .data {
-    font-weight: 600;
-}
-
 .booking-card .booking-actions {
     margin-top: var(--24px);
     display: flex;
@@ -78,126 +155,75 @@
     gap: var(--6px);
 }
 
-
-
-
-/* booking-confirmation.html */
-.booking-confirmation {
-    margin: auto;
-    padding: var(--36px);
-    max-width: 700px;
-    border-radius: var(--24px);
-    box-shadow: var(--card-shadow);
+.booking-card .booking-actions .btn {
+    padding: var(--6px) var(--12px);
+    height: auto;
+    font-size: var(--fs-xs);
+    border-radius: var(--6px);
 }
 
-.booking-confirmation .header {
-    padding: var(--24px);
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    gap: var(--4px);
+/* ===================== Responsive ===================== */
+
+@media (max-width: 1200px) {
+    .booking-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
-.booking-confirmation .status.confirmed {
-    color: var(--success);
+@media (max-width: 768px) {
+    .booking-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .booking-form-container,
+    .booking-details-container {
+        padding: var(--32px);
+        border-radius: var(--16px);
+    }
+
+    .booking-card {
+        padding: var(--18px);
+    }
+
+    .booking-card .booking-actions {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
 }
 
-.booking-confirmation .status.cancelled {
-    color: var(--danger);
-}
+@media (max-width: 480px) {
 
-.booking-confirmation .status.pending {
-    color: var(--warning);
-}
+    .booking-form-container,
+    .booking-details-container {
+        padding: var(--20px);
+        gap: var(--16px);
+    }
 
-.booking-confirmation .subtitle {
-    margin-bottom: var(--8px);
-    font-weight: 600;
-}
+    .booking-card .header {
+        flex-wrap: wrap;
+        gap: var(--12px);
+    }
 
-.booking-confirmation .details {
-    padding: var(--12px) var(--24px);
-    gap: var(--12px);
-    background: var(--bg-light);
-    border-radius: var(--12px);
-}
+    .booking-card .booking-actions .btn {
+        flex: 1 1 auto;
+    }
 
-.booking-confirmation .row {
-    padding-block: var(--12px);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
+    /* Long values (e.g. address) drop under the label instead of squeezing */
+    .details {
+        padding: var(--8px) var(--16px);
+    }
 
-.booking-confirmation .row:not(:last-child) {
-    border-bottom: 2px solid var(--border-light);
-}
+    .details .row {
+        flex-wrap: wrap;
+        gap: var(--4px) var(--12px);
+    }
 
-.booking-confirmation .row .label,
-.booking-confirmation .row .data {
-    font-size: var(--fs-sm);
-    font-weight: 500;
-    color: var(--text-accent);
-}
+    .details .row>* {
+        min-width: 0;
+    }
 
-.booking-confirmation .row .data {
-    font-weight: 700;
-}
-
-.booking-confirmation .row .id {
-    color: var(--primary);
-}
-
-
-
-
-/* booking-form.html */
-.booking-form {
-    margin: auto;
-    padding: var(--48px);
-    display: flex;
-    flex-direction: column;
-    gap: var(--24px);
-    max-width: 800px;
-    border-radius: var(--24px);
-    box-shadow: var(--card-shadow);
-}
-
-.booking-form .subtitle {
-    margin-top: var(--4px);
-    color: var(--text-secondary);
-}
-
-.booking-form .details {
-    padding: var(--24px);
-    gap: var(--12px);
-    background: var(--bg-light);
-    border-radius: var(--12px);
-}
-
-.booking-form .row {
-    padding-block: var(--14px);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.booking-form .row:not(:last-child) {
-    border-bottom: 1px solid var(--border-light);
-}
-
-
-
-
-
-
-.payment-form {
-    margin: auto;
-    padding: var(--48px);
-    display: flex;
-    flex-direction: column;
-    gap: var(--24px);
-    max-width: 600px;
-    box-shadow: var(--card-shadow);
-    border-radius: var(--24px);
+    .details .row .data {
+        text-align: right;
+        overflow-wrap: anywhere;
+    }
 }
