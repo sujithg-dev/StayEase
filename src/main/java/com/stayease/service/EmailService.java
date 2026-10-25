@@ -73,8 +73,8 @@ public class EmailService
 
     public void sendPasswordResetEmail(User user, String rawToken)
     {
-//        String resetLink = "http://localhost:8080/reset-password?token=" + rawToken; // Test
-        String resetLink = "https://stayease-b7ju.onrender.com/reset-password?token=" + rawToken; // Prod
+        String resetLink = "http://localhost:8080/reset-password?token=" + rawToken; // Test
+//        String resetLink = "https://stayease-b7ju.onrender.com/reset-password?token=" + rawToken; // Prod
 
         SimpleMailMessage message = new SimpleMailMessage();
 

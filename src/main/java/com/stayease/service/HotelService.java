@@ -60,11 +60,9 @@ public class HotelService
 
                     if (hotel.getHotelAmenities() == null) return false;
 
-                    return request.getAmenities()
-                            .stream()
-                            .allMatch(selectedAmenity -> hotel.getHotelAmenities()
-                                    .stream().anyMatch(hotelAmenity -> hotelAmenity.equalsIgnoreCase(selectedAmenity))
-                            );
+                    return request.getAmenities().stream()
+                            .anyMatch(selected -> hotel.getHotelAmenities().stream()
+                                    .anyMatch(a -> a.equalsIgnoreCase(selected)));
                 })
                 .filter(hotel ->
                 {

@@ -432,7 +432,7 @@
 
 .hotel-images {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: var(--12px);
 }
 
@@ -442,10 +442,10 @@
 
 .hotel-images .hotel-image-item .tag {
     position: absolute;
-    top: 12px;
-    left: 12px;
+    top: 6px;
+    left: 6px;
     padding: var(--6px) var(--12px);
-    font-size: var(--fs-xs);
+    font-size: var(--fs-2xs);
     font-weight: 500;
     color: var(--white);
     background: var(--primary);
@@ -453,7 +453,7 @@
 }
 
 .hotel-images .hotel-image-item .image {
-    height: 200px;
+    height: 150px;
     border-radius: var(--12px);
 }
 

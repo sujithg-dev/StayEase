@@ -75,7 +75,7 @@
                                 </div>
                             </div>
                             <div class="filter-card rating-filter">
-                                <h2 class="filter-card-title">Hotel Ratings</h2>
+                                <h2 class="filter-card-title">Hotel Rating</h2>
                                 <div class="filter-items">
                                     <label class="filter-item">
                                         <input class="input radio" type="radio" th:field="*{minRating}" value="5">
@@ -152,9 +152,9 @@
                                 <p class="subtitle">Try changing your search filters.</p>
                             </div>
                             <div class="hotel-card" th:each="hotel : ${searchHotels}">
-                                <div class="hotel-image-box">
+                                <a class="hotel-image-box" th:href="@{/hotels/{id}(id=${hotel.hotelId})}">
                                     <img class="hotel-image" th:src="${hotel.hotelCoverImage}" th:alt="${hotel.hotelName}">
-                                </div>
+                                </a>
                                 <div class="hotel-details">
                                     <h2 class="hotel-name" th:text="${hotel.hotelName}"></h2>
                                     <div class="hotel-location">

@@ -53,7 +53,6 @@
     --warning: rgb(219, 91, 16);
 
     --bg: rgb(255, 255, 255);
-    --bg-card1: rgb(235, 235, 235);
     --bg-light: rgb(242, 246, 255);
     --bg-primary: rgb(236, 241, 255);
 
@@ -652,12 +651,12 @@ select {
     width: 40px;
     height: 40px;
     font-size: var(--24px);
-    background: #f1f1f1;
+    border: 1px solid var(--border-light);
     border-radius: 50%;
 }
 
 .back-button:hover {
-    background: #c5c5c5;
+    border-color: var(--border-input);
 }
 
 
