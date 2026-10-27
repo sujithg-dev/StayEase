@@ -281,6 +281,7 @@
 }
 
 .filter-toggle {
+    margin-bottom: var(-12);
     display: none;
     cursor: pointer;
     align-items: center;
@@ -291,9 +292,8 @@
     font-size: var(--fs-sm);
     font-weight: 600;
     color: var(--text-accent);
-    background: var(--bg-light);
     border: 1px solid var(--border-light);
-    border-radius: var(--12px);
+    border-radius: var(--24px);
 }
 
 .filter-toggle .filter-toggle-label {
@@ -335,27 +335,43 @@
 }
 
 .filter-summary-items .filter-chip {
-    padding: var(--8px) var(--6px) var(--8px) var(--12px);
+    position: relative;
     display: flex;
     align-items: center;
-    gap: var(--6px);
-    border: 1px solid var(--border-input);
-    border-radius: var(--12px);
+    line-height: 1.5;
 }
 
 .filter-summary-items .filter-chip .filter {
-    font-size: var(--fs-sm);
-    font-weight: 500;
-    color: var(--text-accent);
+    font-size: var(--fs-lg);
+    font-weight: 700;
+}
+
+.filter-chip:not(:last-child) {
+    margin-right: 6px;
+}
+
+.filter-chip:not(:last-child)::after {
+    content: ",";
+    font-size: var(--fs-lg);
+    font-weight: 600;
 }
 
 .filter-summary-items .filter-chip .remove-filter {
+    position: absolute;
+    top: -6px;
+    right: -6px;
     display: flex;
     align-items: center;
+    opacity: 0;
+}
+
+.filter-summary-items .filter-chip:hover .remove-filter {
+    opacity: 1;
 }
 
 .filter-summary-items .filter-chip .remove-filter .icon {
     font-size: var(--fs-sm);
+    font-weight: 700;
     color: var(--primary);
 }
 
@@ -615,7 +631,7 @@
     .form-hotel-search {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: var(--16px);
+        gap: var(--12px);
     }
 
     .form-hotel-search .input-field {
@@ -629,6 +645,7 @@
         flex: 1;
         width: 100%;
         min-width: 0;
+        font-size: var(--fs-sm);
     }
 
     .form-hotel-search>:last-child {
@@ -639,7 +656,7 @@
         margin: auto;
         width: 100%;
         height: 50px;
-        border-radius: var(--12px);
+        border-radius: var(--24px);
     }
 
     .section-home-destination {
@@ -683,7 +700,7 @@
     .hotel-card .hotel-price {
         position: static;
         order: 1;
-        margin-top: var(--12px);
+        margin-top: 0;
         text-align: left;
     }
 
@@ -784,5 +801,18 @@
 
     .filter-card {
         padding: var(--18px);
+    }
+
+    .filter-items.input-group {
+        display: flex;
+        flex-direction: column;
+        gap: var(--16px);
+    }
+
+    .hotel-card .hotel-amenities {
+        margin-bottom: var(--12px);
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--6px);
     }
 }

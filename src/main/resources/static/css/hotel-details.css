@@ -515,12 +515,22 @@
     .amenities-layout {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .amenity {
+        padding: var(--12px);
+    }
+
+    .amenity .data {
+        font-size: var(--fs-xs);
+    }
 }
 
 @media (max-width: 600px) {
     .gallery-main {
         height: 230px;
     }
+
+
 
     .rooms-layout {
         grid-template-columns: 1fr;
@@ -533,9 +543,7 @@
 }
 
 @media (max-width: 440px) {
-    .amenities-layout {
-        grid-template-columns: 1fr;
-    }
+
 
     .hotel-name {
         font-size: var(--fs-lg);

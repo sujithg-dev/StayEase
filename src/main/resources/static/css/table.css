@@ -117,11 +117,12 @@
     background: transparent;
     width: 6px;
     height: 6px;
+    background: var(--bg-light);
 }
 
 .table-wrapper::-webkit-scrollbar-thumb {
     cursor: pointer;
-    background: var(--bg-primary);
+    background: var(--text-secondary);
     width: 6px;
     height: 6px;
     border-radius: var(--24px);

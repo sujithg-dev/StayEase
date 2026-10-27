@@ -17,7 +17,6 @@
     text-align: center;
     background: var(--bg);
     border: 1px solid var(--border-light);
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     border-radius: var(--24px);
 }
 
@@ -59,7 +58,19 @@
     gap: var(--24px);
     background: var(--bg);
     border: 1px solid var(--border-light);
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    border-radius: var(--24px);
+}
+
+/* Change password Form */
+.password-form {
+    margin: auto;
+    padding: var(--48px);
+    display: flex;
+    flex-direction: column;
+    gap: var(--24px);
+    max-width: 600px;
+    background: var(--bg);
+    border: 1px solid var(--border-light);
     border-radius: var(--24px);
 }
 
@@ -70,6 +81,13 @@
     .profile-container {
         grid-template-columns: 1fr;
         max-width: 600px;
+    }
+}
+
+@media (max-width: 600px) {
+    .profile-form,
+    .password-form {
+        padding: var(--24px);
     }
 }
 

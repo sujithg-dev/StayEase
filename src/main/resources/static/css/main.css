@@ -193,7 +193,7 @@ i {
     gap: var(--6px);
     height: var(--40px);
     font-size: var(--fs-sm);
-    font-weight: 600;
+    font-weight: 700;
     color: var(--white);
     background: var(--bg-primary);
     border-radius: var(--24px);
@@ -359,9 +359,11 @@ select {
     border: 1px solid var(--border-input);
     border-radius: var(--6px);
 }
+
 .multiple-check-field label:hover {
     border-color: var(--text-accent);
 }
+
 .multiple-check-field span {
     font-size: var(--fs-sm);
     font-weight: 500;
@@ -404,13 +406,13 @@ select {
     color: var(--secondary);
 }
 
-.form-header .title {
+.form-header .form-title {
     margin-bottom: var(--6px);
-    font-size: var(--fs-lg);
-    font-weight: 600;
+    font-size: var(--fs-xl);
+    font-weight: 700;
 }
 
-.form-header .subtitle {
+.form-header .form-subtitle {
     color: var(--text-secondary);
     font-weight: 500;
 }
@@ -428,6 +430,8 @@ select {
 }
 
 .form-link {
+    display: inline-flex;
+    font-size: var(--fs-sm);
     font-weight: 600;
     color: var(--primary);
 }
@@ -437,9 +441,10 @@ select {
 }
 
 .form-btn {
-    margin: var(--24px) auto 0;
+    margin: auto;
     width: 250px;
-    font-weight: 600;
+    height: 45px;
+    font-weight: 700;
 }
 
 .form-tip {
@@ -449,7 +454,12 @@ select {
     gap: var(--6px);
 }
 
+.form-tip span {
+    font-size: var(--fs-sm);
+}
+
 .form-actions {
+    margin: var(--24px) auto 0;
     display: flex;
     align-items: center;
     gap: var(--12px);
@@ -531,7 +541,7 @@ select {
     margin-top: var(--2px);
     font-size: var(--fs-xs);
     font-weight: 600;
-    color: var(--text-accent);
+    color: var(--text-secondary);
 }
 
 
@@ -580,7 +590,7 @@ select {
 
 .profile-badge .profile-image .avatar {
     font-size: var(--fs-xs);
-    font-weight: 600;
+    font-weight: 700;
     color: var(--white);
     text-transform: uppercase;
 }
@@ -737,6 +747,7 @@ select {
 .error-card .btn {
     margin: var(--24px) auto 0;
     width: 250px;
+    font-weight: 700;
 }
 
 
@@ -869,18 +880,6 @@ select {
     border-radius: var(--24px);
 }
 
-/* Change password Form */
-.password-form {
-    margin: auto;
-    padding: var(--48px);
-    display: flex;
-    flex-direction: column;
-    gap: var(--24px);
-    max-width: 600px;
-    background: var(--bg);
-    box-shadow: var(--card-shadow);
-    border-radius: var(--24px);
-}
 
 
 /* ===================== Responsive ===================== */
@@ -928,16 +927,43 @@ select {
 
     .navbar .logo .logo-name,
     .navbar .logo .logo-name>span {
-        font-size: var(--28px);
+        font-size: var(--24px);
     }
 
     .navbar .logo .logo-description {
         display: none;
     }
 
+    .profile-badge {
+        padding: 0;
+        border: none;
+    }
+
+    .profile-badge .profile-image {
+        width: 40px;
+        height: 40px;
+    }
+
+    .profile-badge .profile-image .avatar {
+        font-size: var(--fs-base);
+    }
+
     .input-group.grid {
         grid-template-columns: 1fr;
         gap: var(--16px);
+    }
+
+    .input-group.list {
+        gap: var(--16px);
+    }
+
+    .input-field .input {
+        padding: var(--14px);
+    }
+
+    .input-field .password-toggle {
+        top: 40px;
+        right: 14px;
     }
 }
 
@@ -949,11 +975,6 @@ select {
     .profile-form {
         padding: var(--20px);
         gap: var(--16px);
-    }
-
-    .form-actions {
-        flex-direction: column;
-        align-items: stretch;
     }
 
     .form-btn {

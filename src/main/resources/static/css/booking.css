@@ -156,10 +156,10 @@
 }
 
 .booking-card .booking-actions .btn {
-    padding: var(--6px) var(--12px);
+    padding: var(--10px) var(--16px);
     height: auto;
-    font-size: var(--fs-xs);
-    border-radius: var(--6px);
+    font-size: var(--fs-sm);
+    border-radius: var(--24px);
 }
 
 /* ===================== Responsive ===================== */
