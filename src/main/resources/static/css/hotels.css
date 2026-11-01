@@ -270,8 +270,17 @@
     border: 1px solid var(--primary);
 }
 
-.filter-item:has(.input.radio:checked) .value {
+.filter-item:has(.input.radio:checked) span {
     color: var(--white);
+}
+
+.filter-item .star {
+    font-size: var(--fs-md);
+    background: linear-gradient(45deg, #ffc400, #db7e05);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
 }
 
 .filter-item .value {

@@ -142,7 +142,7 @@
                         </form>
                         <div class="hotel-images" th:if="${hotel.hotelImages != null && !hotel.hotelImages.isEmpty()}">
                             <div class="hotel-image-item" th:each="image : ${hotel.hotelImages}">
-                                <span class="tag" th:if="${hotel.hotelCoverImage == image}">Cover Image</span>
+                                <span class="tag" th:if="${hotel.hotelCoverImage == image}">Cover</span>
                                 <img class="image" th:src="${image}" th:alt="${hotel.hotelName}">
                                 <div class="image-actions" th:if="${hotel.hotelCoverImage != image}">
                                     <form th:action="@{/manager/hotels/{hotelId}/images/cover(hotelId=${hotel.hotelId})}" method="post">

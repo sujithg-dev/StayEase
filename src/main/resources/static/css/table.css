@@ -94,9 +94,12 @@
 
 .table-filters .filter-reset {
     cursor: pointer;
+    padding: var(--8px) var(--16px);
     font-size: var(--fs-sm);
     font-weight: 600;
-    color: var(--text);
+    color: var(--white);
+    background: var(--secondary);
+    border-radius: var(--8px);
 }
 
 .table-wrapper {
