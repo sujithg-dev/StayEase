@@ -440,6 +440,7 @@
     position: relative;
     border-radius: var(--12px);
     overflow: hidden;
+    background: var(--bg-primary);
 }
 
 .hotel-images .hotel-image-item .tag {

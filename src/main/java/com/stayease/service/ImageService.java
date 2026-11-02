@@ -1,36 +1,57 @@
 package com.stayease.service;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class ImageService
 {
-    private final Path hotelUploadDirectory = Paths.get("uploads/hotels");
-    private final Path roomUploadDirectory = Paths.get("uploads/rooms");
+    private static final String HOTEL_FOLDER = "stayease/hotels";
+    private static final String ROOM_FOLDER = "stayease/rooms";
 
-    public List<String> saveHotelImages(MultipartFile[] images) {List<String> imagePaths = new ArrayList<>();
+    private final Cloudinary cloudinary;
+
+    public List<String> saveHotelImages(MultipartFile[] images)
+    {
+        return uploadImages(images, HOTEL_FOLDER);
+    }
+
+    public List<String> saveHRoomImages(MultipartFile[] images)
+    {
+        return uploadImages(images, ROOM_FOLDER);
+    }
+
+    public void deleteHotelImageFile(String imageUrl)
+    {
+        deleteImage(imageUrl);
+    }
+
+    public void deleteRoomImageFile(String imageUrl)
+    {
+        deleteImage(imageUrl);
+    }
+
+    private List<String> uploadImages(MultipartFile[] images, String folder)
+    {
+        List<String> imageUrls = new ArrayList<>();
 
         if (images == null)
         {
-            return imagePaths;
+            return imageUrls;
         }
 
         try
         {
-            Files.createDirectories(hotelUploadDirectory);
-
             for (MultipartFile image : images)
             {
                 if (image.isEmpty())
@@ -45,104 +66,56 @@ public class ImageService
                     continue;
                 }
 
-                String extension = getExtension(image.getOriginalFilename());
-                String fileName = UUID.randomUUID() + extension;
-                Path filePath = hotelUploadDirectory.resolve(fileName);
+                Map<?, ?> result = cloudinary.uploader().upload(
+                        image.getBytes(),
+                        ObjectUtils.asMap(
+                                "folder", folder,
+                                "public_id", UUID.randomUUID().toString(),
+                                "resource_type", "image"));
 
-                Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-                imagePaths.add("/uploads/hotels/" + fileName);
+                imageUrls.add(result.get("secure_url").toString());
             }
         }
         catch (IOException e)
         {
-            throw new RuntimeException("Failed to save hotel images", e);
+            throw new RuntimeException("Failed to upload images", e);
         }
 
-        return imagePaths;
+        return imageUrls;
     }
 
-    public List<String> saveHRoomImages(MultipartFile[] images) {List<String> imagePaths = new ArrayList<>();
-
-        if (images == null) return imagePaths;
-
-        try {
-            Files.createDirectories(roomUploadDirectory);
-
-            for (MultipartFile image : images)
-            {
-                if (image.isEmpty())
-                {
-                    continue;
-                }
-
-                String contentType = image.getContentType();
-
-                if (contentType == null || !contentType.startsWith("image/"))
-                {
-                    continue;
-                }
-
-                String extension = getExtension(image.getOriginalFilename());
-                String fileName = UUID.randomUUID() + extension;
-                Path filePath = roomUploadDirectory.resolve(fileName);
-
-                Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-                imagePaths.add("/uploads/rooms/" + fileName);
-            }
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException("Failed to save hotel images", e);
-        }
-
-        return imagePaths;
-    }
-
-    public void deleteHotelImageFile(String imagePath)
+    private void deleteImage(String imageUrl)
     {
-        if (imagePath == null || imagePath.isBlank())
+        if (imageUrl == null || imageUrl.isBlank())
+        {
+            return;
+        }
+
+        if (!imageUrl.contains("res.cloudinary.com"))
         {
             return;
         }
 
         try
         {
-            String fileName = imagePath.substring(imagePath.lastIndexOf("/") + 1);
-            Path filePath = hotelUploadDirectory.resolve(fileName);
-            Files.deleteIfExists(filePath);
+            cloudinary.uploader().destroy(extractPublicId(imageUrl), ObjectUtils.asMap("invalidate", true));
         }
         catch (IOException e)
         {
-            throw new RuntimeException("Failed to delete hotel image", e);
+            throw new RuntimeException("Failed to delete image", e);
         }
     }
 
-    public void deleteRoomImageFile(String imagePath)
+    private String extractPublicId(String url)
     {
-        if (imagePath == null || imagePath.isBlank())
+        String afterUpload = url.substring(url.indexOf("/upload/") + "/upload/".length());
+
+        if (afterUpload.matches("^v\\d+/.*"))
         {
-            return;
+            afterUpload = afterUpload.substring(afterUpload.indexOf('/') + 1);
         }
 
-        try
-        {
-            String fileName = imagePath.substring(imagePath.lastIndexOf("/") + 1);
-            Path filePath = roomUploadDirectory.resolve(fileName);
-            Files.deleteIfExists(filePath);
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException("Failed to delete room image", e);
-        }
-    }
-
-    private String getExtension(String fileName)
-    {
-        if (fileName == null || !fileName.contains("."))
-        {
-            return "";
-        }
-
-        return fileName.substring(fileName.lastIndexOf("."));
+        int dot = afterUpload.lastIndexOf('.');
+        return dot > 0 ? afterUpload.substring(0, dot) : afterUpload;
     }
 }
