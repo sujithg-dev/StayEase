@@ -1,46 +1,59 @@
 package com.stayease.service;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.Uploader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class ImageServiceTest
 {
+    private static final String CLOUD_URL = "https://res.cloudinary.com/demo/image/upload/v123/";
+
+    @Mock
+    private Cloudinary cloudinary;
+
+    @Mock
+    private Uploader uploader;
+
+    @Captor
+    private ArgumentCaptor<Map<String, Object>> optionsCaptor;
+
     private ImageService imageService;
 
-    @TempDir
-    Path tempDir;
-
-    private Path hotelDirectory;
-    private Path roomDirectory;
-
     @BeforeEach
-    void setUp() throws Exception
+    void setUp()
     {
-        imageService = new ImageService();
-
-        hotelDirectory = tempDir.resolve("hotels");
-        roomDirectory = tempDir.resolve("rooms");
-
-        setDirectory("hotelUploadDirectory", hotelDirectory);
-        setDirectory("roomUploadDirectory", roomDirectory);
+        imageService = new ImageService(cloudinary);
+        lenient().when(cloudinary.uploader()).thenReturn(uploader);
     }
 
-    private void setDirectory(String fieldName, Path path) throws Exception
+    private void stubUploadSuccess() throws IOException
     {
-        Field field = ImageService.class.getDeclaredField(fieldName);
-        field.setAccessible(true);
-        field.set(imageService, path);
+        when(uploader.upload(any(), anyMap())).thenAnswer(invocation ->
+        {
+            Map<?, ?> options = invocation.getArgument(1);
+            return Map.of("secure_url",
+                    CLOUD_URL + options.get("folder") + "/" + options.get("public_id") + ".jpg");
+        });
     }
 
     private MockMultipartFile image(String name, String contentType, byte[] content)
@@ -52,198 +65,197 @@ class ImageServiceTest
     void saveHotelImages_whenNull_returnsEmptyList()
     {
         assertTrue(imageService.saveHotelImages(null).isEmpty());
+        verifyNoInteractions(uploader);
     }
 
     @Test
-    void saveHotelImages_savesValidImages()
+    void saveHotelImages_uploadsValidImagesToHotelFolder() throws Exception
     {
+        stubUploadSuccess();
+
         MultipartFile[] images = {
                 image("hotel.jpg", "image/jpeg", new byte[]{1, 2, 3}),
                 image("room.png", "image/png", new byte[]{4, 5, 6})
         };
 
-        List<String> paths = imageService.saveHotelImages(images);
+        List<String> urls = imageService.saveHotelImages(images);
 
-        assertEquals(2, paths.size());
-        assertTrue(paths.stream().allMatch(path -> path.startsWith("/uploads/hotels/")));
-        assertTrue(paths.get(0).endsWith(".jpg"));
-        assertTrue(paths.get(1).endsWith(".png"));
-        assertEquals(2, countFiles(hotelDirectory));
+        assertEquals(2, urls.size());
+        assertTrue(urls.stream().allMatch(url -> url.startsWith(CLOUD_URL + "stayease/hotels/")));
+
+        verify(uploader, times(2)).upload(any(), optionsCaptor.capture());
+        assertTrue(optionsCaptor.getAllValues().stream()
+                .allMatch(o -> "stayease/hotels".equals(o.get("folder"))));
     }
 
     @Test
-    void saveHotelImages_skipsEmptyFiles()
+    void saveHotelImages_skipsEmptyFiles() throws Exception
     {
+        stubUploadSuccess();
+
         MultipartFile[] images = {
                 image("empty.jpg", "image/jpeg", new byte[0]),
                 image("valid.jpg", "image/jpeg", new byte[]{1})
         };
 
-        List<String> paths = imageService.saveHotelImages(images);
+        List<String> urls = imageService.saveHotelImages(images);
 
-        assertEquals(1, paths.size());
-        assertEquals(1, countFiles(hotelDirectory));
+        assertEquals(1, urls.size());
+        verify(uploader, times(1)).upload(any(), anyMap());
     }
 
     @Test
-    void saveHotelImages_skipsNonImageFiles()
+    void saveHotelImages_skipsNonImageFiles() throws Exception
     {
+        stubUploadSuccess();
+
         MultipartFile[] images = {
                 image("document.txt", "text/plain", new byte[]{1, 2}),
                 image("unknown.jpg", null, new byte[]{3, 4}),
                 image("valid.jpg", "image/jpeg", new byte[]{5, 6})
         };
 
-        List<String> paths = imageService.saveHotelImages(images);
+        List<String> urls = imageService.saveHotelImages(images);
 
-        assertEquals(1, paths.size());
-        assertEquals(1, countFiles(hotelDirectory));
+        assertEquals(1, urls.size());
+        verify(uploader, times(1)).upload(any(), anyMap());
     }
 
     @Test
-    void saveHotelImages_whenFilenameHasNoExtension_savesWithoutExtension()
+    void saveHotelImages_usesUniquePublicIdsForRepeatedUploads() throws Exception
     {
+        stubUploadSuccess();
+
         MultipartFile[] images = {
-                image("hotelimage", "image/jpeg", new byte[]{1, 2, 3})
+                image("hotel.jpg", "image/jpeg", new byte[]{1}),
+                image("hotel.jpg", "image/jpeg", new byte[]{2})
         };
 
-        List<String> paths = imageService.saveHotelImages(images);
+        List<String> urls = imageService.saveHotelImages(images);
 
-        assertEquals(1, paths.size());
-        assertTrue(paths.getFirst().startsWith("/uploads/hotels/"));
-        assertFalse(paths.getFirst().endsWith("."));
+        assertEquals(2, urls.size());
+        assertEquals(2, new HashSet<>(urls).size());
+    }
+
+    @Test
+    void saveHotelImages_whenUploadFails_throwsRuntimeException() throws Exception
+    {
+        when(uploader.upload(any(), anyMap())).thenThrow(new IOException("network down"));
+
+        MultipartFile[] images = { image("hotel.jpg", "image/jpeg", new byte[]{1}) };
+
+        assertThrows(RuntimeException.class, () -> imageService.saveHotelImages(images));
     }
 
     @Test
     void saveHRoomImages_whenNull_returnsEmptyList()
     {
         assertTrue(imageService.saveHRoomImages(null).isEmpty());
+        verifyNoInteractions(uploader);
     }
 
     @Test
+    void saveHRoomImages_uploadsValidImagesToRoomFolder() throws Exception
+    {
+        stubUploadSuccess();
 
-    void saveHRoomImages_savesValidImages() {
         MultipartFile[] images = {
                 image("room.jpg", "image/jpeg", new byte[]{1, 2, 3}),
                 image("room.png", "image/png", new byte[]{4, 5, 6})
         };
 
-        List<String> paths = imageService.saveHRoomImages(images);
+        List<String> urls = imageService.saveHRoomImages(images);
 
-        assertEquals(2, paths.size());
-        assertTrue(paths.stream().allMatch(path -> path.startsWith("/uploads/rooms/")));
-        assertTrue(paths.get(0).endsWith(".jpg"));
-        assertTrue(paths.get(1).endsWith(".png"));
-        assertEquals(2, countFiles(roomDirectory));
+        assertEquals(2, urls.size());
+        assertTrue(urls.stream().allMatch(url -> url.startsWith(CLOUD_URL + "stayease/rooms/")));
+
+        verify(uploader, times(2)).upload(any(), optionsCaptor.capture());
+        assertTrue(optionsCaptor.getAllValues().stream()
+                .allMatch(o -> "stayease/rooms".equals(o.get("folder"))));
     }
 
     @Test
-    void saveHRoomImages_skipsEmptyAndNonImageFiles()
+    void saveHRoomImages_skipsEmptyAndNonImageFiles() throws Exception
     {
+        stubUploadSuccess();
+
         MultipartFile[] images = {
                 image("empty.jpg", "image/jpeg", new byte[0]),
                 image("document.pdf", "application/pdf", new byte[]{1}),
                 image("valid.webp", "image/webp", new byte[]{2, 3})
         };
 
-        List<String> paths = imageService.saveHRoomImages(images);
+        List<String> urls = imageService.saveHRoomImages(images);
 
-        assertEquals(1, paths.size());
-        assertTrue(paths.getFirst().endsWith(".webp"));
-        assertEquals(1, countFiles(roomDirectory));
+        assertEquals(1, urls.size());
+        verify(uploader, times(1)).upload(any(), anyMap());
     }
 
+    // ---------- delete ----------
+
     @Test
-    void deleteHotelImageFile_deletesExistingFile() throws IOException
+    void deleteHotelImageFile_callsDestroyWithPublicId() throws Exception
     {
-        Files.createDirectories(hotelDirectory);
-        Path file = hotelDirectory.resolve("hotel.jpg");
-        Files.write(file, new byte[]{1, 2, 3});
+        imageService.deleteHotelImageFile(CLOUD_URL + "stayease/hotels/abc123.jpg");
 
-        imageService.deleteHotelImageFile("/uploads/hotels/hotel.jpg");
-
-        assertFalse(Files.exists(file));
+        verify(uploader).destroy(eq("stayease/hotels/abc123"), anyMap());
     }
 
     @Test
-    void deleteHotelImageFile_whenFileDoesNotExist_doesNotThrow()
+    void deleteRoomImageFile_callsDestroyWithPublicId() throws Exception
     {
-        assertDoesNotThrow(() -> imageService.deleteHotelImageFile("/uploads/hotels/missing.jpg"));
+        imageService.deleteRoomImageFile(CLOUD_URL + "stayease/rooms/xyz789.png");
+
+        verify(uploader).destroy(eq("stayease/rooms/xyz789"), anyMap());
     }
 
     @Test
-    void deleteHotelImageFile_whenPathNull_doesNothing()
+    void deleteHotelImageFile_whenUrlHasNoVersion_stillExtractsPublicId() throws Exception
+    {
+        imageService.deleteHotelImageFile(
+                "https://res.cloudinary.com/demo/image/upload/stayease/hotels/abc123.jpg");
+
+        verify(uploader).destroy(eq("stayease/hotels/abc123"), anyMap());
+    }
+
+    @Test
+    void deleteHotelImageFile_ignoresOldLocalPaths() throws Exception
+    {
+        imageService.deleteHotelImageFile("/uploads/hotels/old-image.jpg");
+
+        verifyNoInteractions(uploader);
+    }
+
+    @Test
+    void deleteRoomImageFile_ignoresOldLocalPaths() throws Exception
+    {
+        imageService.deleteRoomImageFile("/uploads/rooms/old-image.jpg");
+
+        verifyNoInteractions(uploader);
+    }
+
+    @Test
+    void deleteHotelImageFile_whenPathNullOrBlank_doesNothing()
     {
         assertDoesNotThrow(() -> imageService.deleteHotelImageFile(null));
-    }
-
-    @Test
-    void deleteHotelImageFile_whenPathBlank_doesNothing()
-    {
         assertDoesNotThrow(() -> imageService.deleteHotelImageFile("  "));
+        verifyNoInteractions(uploader);
     }
 
     @Test
-    void deleteRoomImageFile_deletesExistingFile() throws IOException
-    {
-        Files.createDirectories(roomDirectory);
-        Path file = roomDirectory.resolve("room.jpg");
-        Files.write(file, new byte[]{1, 2, 3});
-
-        imageService.deleteRoomImageFile("/uploads/rooms/room.jpg");
-
-        assertFalse(Files.exists(file));
-    }
-
-    @Test
-    void deleteRoomImageFile_whenFileDoesNotExist_doesNotThrow()
-    {
-        assertDoesNotThrow(() -> imageService.deleteRoomImageFile("/uploads/rooms/missing.jpg"));
-    }
-
-    @Test
-    void deleteRoomImageFile_whenPathNull_doesNothing()
+    void deleteRoomImageFile_whenPathNullOrBlank_doesNothing()
     {
         assertDoesNotThrow(() -> imageService.deleteRoomImageFile(null));
-    }
-
-    @Test
-    void deleteRoomImageFile_whenPathBlank_doesNothing()
-    {
         assertDoesNotThrow(() -> imageService.deleteRoomImageFile("  "));
+        verifyNoInteractions(uploader);
     }
 
     @Test
-    void saveHotelImages_usesUniqueFilenamesForRepeatedUploads()
+    void deleteHotelImageFile_whenDestroyFails_throwsRuntimeException() throws Exception
     {
-        MultipartFile[] firstUpload = {
-                image("hotel.jpg", "image/jpeg", new byte[]{1})
-        };
-        MultipartFile[] secondUpload = {
-                image("hotel.jpg", "image/jpeg", new byte[]{2})
-        };
+        when(uploader.destroy(anyString(), anyMap())).thenThrow(new IOException("fail"));
 
-        String firstPath = imageService.saveHotelImages(firstUpload).getFirst();
-        String secondPath = imageService.saveHotelImages(secondUpload).getFirst();
-
-        assertNotEquals(firstPath, secondPath);
-        assertEquals(2, countFiles(hotelDirectory));
-    }
-
-    private long countFiles(Path directory)
-    {
-        if (!Files.exists(directory))
-        {
-            return 0;
-        }
-
-        try (var files = Files.list(directory))
-        {
-            return files.count();
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
+        assertThrows(RuntimeException.class, () ->
+                imageService.deleteHotelImageFile(CLOUD_URL + "stayease/hotels/abc123.jpg"));
     }
 }
