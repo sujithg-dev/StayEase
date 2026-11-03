@@ -1,25 +1,6 @@
-/**
- * Reusable file uploader. Works on any <input type="file">.
- *
- * Opt in with data-uploader. Optional settings (all data attributes):
- *   data-max-size="5"        max size per file in MB (default 5)
- *   data-max-files="10"      max number of files (default: unlimited)
- *   data-landscape="true"    images only: reject non-landscape images
- *   data-cover="true"        show a "Cover" badge on the first image
- *   data-label="images"      word used in the counter (default "files")
- * Allowed types come from the input's own `accept` attribute.
- * Add `multiple` to the input to allow more than one file.
- */
-
-// Sample File Input
-// <input class="input file-input" type="file" id="imageFiles" name="imageFiles" accept="image/jpeg,image/png,image/webp" multiple data-uploader data-landscape="true" data-cover="true" data-label="images">
-// <input class="input file-input" type="file" id="roomFiles" name="roomFiles" accept="image/*" multiple data-uploader data-max-files="8" data-max-size="3" data-label="photos">
-// <input class="input file-input" type="file" id="brochure" name="brochure" accept=".pdf" data-uploader data-label="file">
-
 (() => {
     const isImage = f => f.type.startsWith('image/');
 
-    // Check a file against the input's accept="" list (image/png, image/*, .pdf)
     const matchesAccept = (file, accept) => {
         if (!accept) return true;
         const name = file.name.toLowerCase();
@@ -29,9 +10,8 @@
                     : file.type === a);
     };
 
-    // Turn accept="image/jpeg,image/png" into "JPEG, PNG"
     const acceptLabel = accept => accept
-        ? accept.split(',').map(s => s.trim().replace(/^.*\//, '').replace(/^\./, '').replace('*', 'any').toUpperCase()).join(', ')
+        ? accept.split(',').map(s => s.trim().replace(/^.*\
         : 'Any file';
 
     const isLandscape = file => new Promise(res => {
@@ -56,7 +36,6 @@
 
         if (!input.id) input.id = 'uploader-' + Math.random().toString(36).slice(2, 8);
 
-        // Build UI around the existing input
         const drop = document.createElement('label');
         drop.className = 'file-drop';
         drop.htmlFor = input.id;
@@ -84,7 +63,7 @@
 
         async function add(list) {
             const errors = [];
-            if (!multiple) files = []; // single input: new file replaces old one
+            if (!multiple) files = [];
             for (const f of list) {
                 if (!matchesAccept(f, accept)) { errors.push(`${f.name}: file type not allowed.`); continue; }
                 if (f.size > maxSize) { errors.push(`${f.name}: larger than ${maxSize / 1048576} MB.`); continue; }
@@ -107,7 +86,7 @@
                     d.innerHTML = `<img src="${url}" alt="">`;
                 } else {
                     d.classList.add('thumb-file');
-                    d.textContent = f.name; // textContent avoids HTML injection from file names
+                    d.textContent = f.name;
                 }
                 if (showCover && i === 0 && isImage(f)) {
                     const c = document.createElement('span'); c.className = 'cover'; c.textContent = 'Cover';
@@ -126,7 +105,6 @@
         ['dragleave', 'drop'].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.remove('dragover'); }));
         drop.addEventListener('drop', e => add([...e.dataTransfer.files]));
 
-        // Keep the UI in step if the form is reset
         input.form?.addEventListener('reset', () => { files = []; msg.textContent = ''; sync(); render(); });
 
         sync();

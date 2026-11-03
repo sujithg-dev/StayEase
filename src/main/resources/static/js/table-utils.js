@@ -20,19 +20,17 @@ function initTable(container) {
     };
     const label = (row, i) => row.cells[i].textContent.trim().replace(/\s+/g, ' ');
 
-    // "No results" row
     const noResults = document.createElement('tr');
     noResults.className = 'no-results-row';
     noResults.hidden = true;
     noResults.innerHTML = `<td colspan="${headers.length}" style="text-align:center;padding:24px;">No matching records found</td>`;
     tbody.appendChild(noResults);
 
-    // ---------- Filters (dropdowns) ----------
     const filterSelects = [];
     headers.forEach((th, i) => {
         if (!th.hasAttribute('data-filter')) return;
 
-        const options = new Map(); // value -> label
+        const options = new Map();
         rows.forEach(r => {
             const v = rawValue(r, i);
             if (v && !options.has(v)) options.set(v, label(r, i));
@@ -68,7 +66,6 @@ function initTable(container) {
         filtersBox.appendChild(reset);
     }
 
-    // ---------- Search ----------
     if (searchInput) {
         let t;
         searchInput.addEventListener('input', () => {
@@ -77,7 +74,6 @@ function initTable(container) {
         });
     }
 
-    // ---------- Sorting ----------
     headers.forEach((th, i) => {
         const type = th.dataset.sort;
         if (!type) return;
@@ -97,7 +93,6 @@ function initTable(container) {
         return a.localeCompare(b, undefined, { sensitivity: 'base', numeric: true });
     };
 
-    // ---------- Render ----------
     function render() {
         let visible = rows.filter(row => {
             const matchesSearch = !state.query || row.textContent.toLowerCase().includes(state.query);

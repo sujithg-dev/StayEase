@@ -24,6 +24,7 @@
             <section class="section section-hotels">
                 <div class="back-wrapper">
                     <a class="back-button" th:href="@{/home}"><span class="material-symbols-outlined">arrow_back</span></a>
+                    <button class="filter-toggle" type="button" aria-expanded="true"><span class="filter-toggle-label"><span class="material-symbols-outlined">tune</span>Filters</span><span class="material-symbols-outlined chevron">expand_more</span</button>
                 </div>
                 <div class="empty-box" th:if="${#lists.isEmpty(hotels)}">
                     <h1 class="title">No hotels found!</h1>

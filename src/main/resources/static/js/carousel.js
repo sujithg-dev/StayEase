@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    let active = null; // the carousel currently open
+    let active = null;
 
     document.querySelectorAll('.carousel-modal[data-carousel]').forEach(modal => {
         const key = modal.dataset.carousel;
@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function () {
             active = null;
         }
 
-        // Triggers that belong to this modal
         document.querySelectorAll('[data-carousel-target="' + key + '"]').forEach(el => {
             el.style.cursor = 'pointer';
             el.addEventListener('click', () => open(parseInt(el.dataset.index, 10) || 0));
@@ -48,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 e.target.classList.contains('carousel-slide')) close();
         });
 
-        // Swipe
         let startX = 0;
         modal.addEventListener('touchstart', e => { startX = e.changedTouches[0].clientX; }, { passive: true });
         modal.addEventListener('touchend', e => {
@@ -57,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }, { passive: true });
     });
 
-    // Single keyboard listener for whichever carousel is open
     document.addEventListener('keydown', e => {
         if (!active) return;
         if (e.key === 'Escape') active.close();
