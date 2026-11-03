@@ -31,7 +31,7 @@
                         <img class="hotel-image" th:src="${hotel.hotelCoverImage}" th:alt="${hotel.hotelName}">
                     </div>
                     <div class="gallery-small" th:if="${hotel.hotelImages != null}">
-                        <div class="gallery-item" data-carousel-target="hotel" th:each="image, stat : ${hotel.hotelImages}" th:if="${image != hotel.hotelCoverImage && stat.index < 5}" th:attr="data-index=${stat.index}">
+                        <div class="gallery-item" data-carousel-target="hotel" th:each="image, stat : ${hotel.hotelImages}" th:if="${image != hotel.hotelCoverImage && stat.index < 4}" th:attr="data-index=${stat.index}">
                             <img class="hotel-image" th:src="${image}" th:alt="${hotel.hotelName}">
                         </div>
                     </div>

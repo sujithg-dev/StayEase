@@ -940,12 +940,12 @@ select {
     }
 
     .profile-badge .profile-image {
-        width: 40px;
-        height: 40px;
+        width: 35px;
+        height: 35px;
     }
 
     .profile-badge .profile-image .avatar {
-        font-size: var(--fs-base);
+        font-size: var(--fs-sm);
     }
 
     .input-group.grid {
@@ -965,6 +965,10 @@ select {
         top: 40px;
         right: 14px;
     }
+
+        .form-header .logo {
+            margin-bottom: var(--12px);
+        }
 }
 
 @media (max-width: 480px) {

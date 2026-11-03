@@ -30,29 +30,11 @@
 /* No absolute centering on small/short screens (tall forms got cut off) */
 @media (max-width: 640px),
 (max-height: 760px) {
-    .auth-page {
-        position: static;
-        transform: none;
-        min-height: 100dvh;
-        padding: var(--16px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
     .auth-content {
-        width: 100%;
-        max-width: 600px;
-    }
-}
-
-@media (max-width: 480px) {
-    .auth-content {
-        padding: var(--8px);
-        border-radius: var(--16px);
+        width: 90%;
     }
 
     .auth-form {
-        padding: var(--16px);
+        padding: var(--12px);
     }
 }

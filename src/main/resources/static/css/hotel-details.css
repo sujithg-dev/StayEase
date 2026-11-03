@@ -516,11 +516,13 @@
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .amenity {
-        padding: var(--12px);
+    .amenity,
+    .policy {
+        padding: var(--10px);
     }
 
-    .amenity .data {
+    .amenity .data,
+    .policy .data {
         font-size: var(--fs-xs);
     }
 }
@@ -546,6 +548,6 @@
 
 
     .hotel-name {
-        font-size: var(--fs-lg);
+        font-size: var(--fs-xl);
     }
 }
